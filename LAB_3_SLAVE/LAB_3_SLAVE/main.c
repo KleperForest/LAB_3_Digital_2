@@ -12,7 +12,7 @@
 
 #include <avr/io.h>
 #include "LIB_me/ADC/ADC.h"
-
+//main_slave
 
 int main(void)
 {
