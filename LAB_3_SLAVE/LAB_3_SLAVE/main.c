@@ -4,7 +4,7 @@
 // IE3054: ELECTRÓNICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_SLAVE.c
-// Descripción: Laboratorio, librerias LCD, ADC y UART.
+// Descripción: Laboratorio, librerias Comunicación SPI.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:58:42 AM
 //////////////////////////////////////////////////////////////////////
