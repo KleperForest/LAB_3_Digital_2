@@ -3,15 +3,15 @@
 // Universidad del Valle de Guatemala
 // IE3054: ELECTRÓNICA DIGITAL 2
 // Autor: Alan Gomez
-// Proyecto: Lab3.c
-// Descripción: Laboratorio, Comunicación SPI.
+// Proyecto: LAB_3_MASTER.c
+// Descripción: Laboratorio, comunicación SPI_Mode_Master.
 // Hardware: ATmega328p
-// Created: 7/24/2024 7:17:05 PM
+// Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
 #include <avr/io.h>
-
+#include "LIB_me/ADC/ADC.h"
 
 int main(void)
 {
