@@ -4,6 +4,8 @@
 
 LIB_me\ADC\ADC.c
 
+LIB_me\SPI\SPI.c
+
 LIB_me\UART\UART.c
 
 main.c
