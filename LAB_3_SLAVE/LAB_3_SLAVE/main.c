@@ -17,9 +17,12 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdint.h>
 #include <util/delay.h>
 #include "LIB_me/ADC/ADC.h"
-#include "LIB_me/UART/UART.h"
+#include "LIB_me/SPI/SPI.h"
 
 ////////////////////////////////////////////////////
 // Variables.
@@ -27,7 +30,10 @@
 char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en el LCD y UART
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 
-int voltage1, voltage2; //Mapeo de ADC
+int voltage1, voltage2; //Mapeo de ADC y Envio de SPI
+
+//Comunciacion SPI
+uint8_t valorSPI = 0;
 
 ////////////////////////////////////////////////////
 // Prototipos de funciones
@@ -41,12 +47,22 @@ void process_command(char command);
 
 int main(void)
 {
+	//Salidas de leds
+	// Configurar Pines como salida
+	DDRD |= (1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7);
+	DDRB |= (1<<DDB0)|(1<<DDB1);
 	
+	PORTD &= ~((1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7));
+	PORTB &= ~((1<<DDB0)|(1<<DDB1));
+	
+	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
 	ADC_Init();  // Inicializa el ADC
 	UART_Init(BAUD);  // Inicializa la UART
 
 	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
-
+		
+	SPCR |= (1<<SPIE); // Activar ISR SPI
+	sei();
 
 	// Mostrar el menú inicial en la consola
 	display_menu();
@@ -57,8 +73,8 @@ int main(void)
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
 		
 		// Convertir los valores ADC a voltaje
-		voltage1 = (int)(((adc_results[0] * 5.0) / 1023)*100);
-		voltage2 = (int)(((adc_results[1] * 5.0) / 1023)*100);
+		voltage1 = (int)(((adc_results[0] * 5.0) / 898)*100);
+		voltage2 = (int)(((adc_results[1] * 5.0) / 898)*100);
 
 
 		// Leer y procesar los comandos de la UART
@@ -93,4 +109,11 @@ void process_command(char command) {
 		break;
 	}
 	display_menu();
+}
+//Rutina para vec del SPI
+ISR(SPI_STC_vect) {
+		valorSPI = SPDR;
+		if (valorSPI == 'c') {
+			SPI_send(adc_results[1]);
+			} 
 }
