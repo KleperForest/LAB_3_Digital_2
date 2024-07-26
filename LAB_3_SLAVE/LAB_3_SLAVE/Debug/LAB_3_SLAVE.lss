@@ -3,31 +3,31 @@ LAB_3_SLAVE.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000346  2**0
+  0 .data         00000000  00800100  00800100  00000342  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000002d2  00000000  00000000  00000074  2**1
+  1 .text         000002ce  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000007  00800100  00800100  00000346  2**0
+  2 .bss          00000006  00800100  00800100  00000342  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000346  2**0
+  3 .comment      00000030  00000000  00000000  00000342  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000378  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000374  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000088  00000000  00000000  000003b8  2**0
+  5 .debug_aranges 00000088  00000000  00000000  000003b4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000b54  00000000  00000000  00000440  2**0
+  6 .debug_info   00000b51  00000000  00000000  0000043c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000081a  00000000  00000000  00000f94  2**0
+  7 .debug_abbrev 00000829  00000000  00000000  00000f8d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   0000056d  00000000  00000000  000017ae  2**0
+  8 .debug_line   0000056d  00000000  00000000  000017b6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000013c  00000000  00000000  00001d1c  2**2
+  9 .debug_frame  0000013c  00000000  00000000  00001d24  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005d9  00000000  00000000  00001e58  2**0
+ 10 .debug_str    000005de  00000000  00000000  00001e60  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000003ca  00000000  00000000  00002431  2**0
+ 11 .debug_loc    000003e8  00000000  00000000  0000243e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000058  00000000  00000000  000027fb  2**0
+ 12 .debug_ranges 00000058  00000000  00000000  00002826  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -85,11 +85,11 @@ Disassembly of section .text:
   8a:	1d 92       	st	X+, r1
 
 0000008c <.do_clear_bss_start>:
-  8c:	a7 30       	cpi	r26, 0x07	; 7
+  8c:	a6 30       	cpi	r26, 0x06	; 6
   8e:	b2 07       	cpc	r27, r18
   90:	e1 f7       	brne	.-8      	; 0x8a <.do_clear_bss_loop>
   92:	0e 94 fe 00 	call	0x1fc	; 0x1fc <main>
-  96:	0c 94 67 01 	jmp	0x2ce	; 0x2ce <_exit>
+  96:	0c 94 65 01 	jmp	0x2ca	; 0x2ca <_exit>
 
 0000009a <__bad_interrupt>:
   9a:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -235,7 +235,7 @@ void SPI_init(SPI_TYPE sType, SPI_Data_Order sDataOrder, SPI_Clock_Polarity sClo
  14e:	fc 01       	movw	r30, r24
  150:	ec 5c       	subi	r30, 0xCC	; 204
  152:	ff 4f       	sbci	r31, 0xFF	; 255
- 154:	0c 94 61 01 	jmp	0x2c2	; 0x2c2 <__tablejump2__>
+ 154:	0c 94 5f 01 	jmp	0x2be	; 0x2be <__tablejump2__>
 			case 0: //DIV2
 				SPCR &= ~((1<<SPR1)|(1<<SPR0));
  158:	8c b5       	in	r24, 0x2c	; 44
@@ -371,12 +371,12 @@ void SPI_send(uint8_t data) {
  1fa:	08 95       	ret
 
 000001fc <main>:
+uint8_t adc_value_2 = 0;
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 
 void refreshPORT(uint8_t valor);
 
-int main(void)
-{
+int main(void) {
  1fc:	cf 93       	push	r28
  1fe:	df 93       	push	r29
  200:	00 d0       	rcall	.+0      	; 0x202 <main+0x6>
@@ -401,7 +401,7 @@ int main(void)
  21a:	8c 7f       	andi	r24, 0xFC	; 252
  21c:	85 b9       	out	0x05, r24	; 5
 	
-	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
+	SPI_init(SPI_SLAVE_SS, SPI_Data_Order_MSB, SPI_Clock_IDLE_LOW, SPI_clock_First_EDGE);
  21e:	20 e0       	ldi	r18, 0x00	; 0
  220:	40 e0       	ldi	r20, 0x00	; 0
  222:	60 e0       	ldi	r22, 0x00	; 0
@@ -421,17 +421,16 @@ int main(void)
 	sei();
  23c:	78 94       	sei
 	
-	while (1)
-	{
+	while (1) {
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
  23e:	42 e0       	ldi	r20, 0x02	; 2
- 240:	63 e0       	ldi	r22, 0x03	; 3
+ 240:	62 e0       	ldi	r22, 0x02	; 2
  242:	71 e0       	ldi	r23, 0x01	; 1
  244:	ce 01       	movw	r24, r28
  246:	01 96       	adiw	r24, 0x01	; 1
  248:	0e 94 6b 00 	call	0xd6	; 0xd6 <ADC_Read_Multiple>
 		adc_value_1 = adc_results[0];
- 24c:	e3 e0       	ldi	r30, 0x03	; 3
+ 24c:	e2 e0       	ldi	r30, 0x02	; 2
  24e:	f1 e0       	ldi	r31, 0x01	; 1
  250:	80 81       	ld	r24, Z
  252:	80 93 01 01 	sts	0x0101, r24	; 0x800101 <adc_value_1>
@@ -441,7 +440,6 @@ int main(void)
  25c:	f0 cf       	rjmp	.-32     	; 0x23e <main+0x42>
 
 0000025e <__vector_17>:
-		
 	}
 }
 
@@ -463,51 +461,51 @@ ISR(SPI_STC_vect) {
  27a:	bf 93       	push	r27
  27c:	ef 93       	push	r30
  27e:	ff 93       	push	r31
-	valorSPI = SPDR;
+	uint8_t received_char = SPDR;
  280:	8e b5       	in	r24, 0x2e	; 46
- 282:	80 93 02 01 	sts	0x0102, r24	; 0x800102 <valorSPI>
-	if (valorSPI == 'c') {
- 286:	83 36       	cpi	r24, 0x63	; 99
- 288:	29 f4       	brne	.+10     	; 0x294 <__vector_17+0x36>
+	if (received_char == 'c') {
+ 282:	83 36       	cpi	r24, 0x63	; 99
+ 284:	29 f4       	brne	.+10     	; 0x290 <__vector_17+0x32>
 		SPI_send(adc_value_1);
- 28a:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <adc_value_1>
- 28e:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <SPI_send>
- 292:	06 c0       	rjmp	.+12     	; 0x2a0 <__vector_17+0x42>
-		} else if (valorSPI == 'd') {
- 294:	84 36       	cpi	r24, 0x64	; 100
- 296:	21 f4       	brne	.+8      	; 0x2a0 <__vector_17+0x42>
+ 286:	80 91 01 01 	lds	r24, 0x0101	; 0x800101 <adc_value_1>
+ 28a:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <SPI_send>
+ 28e:	06 c0       	rjmp	.+12     	; 0x29c <__vector_17+0x3e>
+		} else if (received_char == 'd') {
+ 290:	84 36       	cpi	r24, 0x64	; 100
+ 292:	21 f4       	brne	.+8      	; 0x29c <__vector_17+0x3e>
 		SPI_send(adc_value_2);
- 298:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
- 29c:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <SPI_send>
+ 294:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 298:	0e 94 f9 00 	call	0x1f2	; 0x1f2 <SPI_send>
 	}
- 2a0:	ff 91       	pop	r31
- 2a2:	ef 91       	pop	r30
- 2a4:	bf 91       	pop	r27
- 2a6:	af 91       	pop	r26
- 2a8:	9f 91       	pop	r25
- 2aa:	8f 91       	pop	r24
- 2ac:	7f 91       	pop	r23
- 2ae:	6f 91       	pop	r22
- 2b0:	5f 91       	pop	r21
- 2b2:	4f 91       	pop	r20
- 2b4:	3f 91       	pop	r19
- 2b6:	2f 91       	pop	r18
+}
+ 29c:	ff 91       	pop	r31
+ 29e:	ef 91       	pop	r30
+ 2a0:	bf 91       	pop	r27
+ 2a2:	af 91       	pop	r26
+ 2a4:	9f 91       	pop	r25
+ 2a6:	8f 91       	pop	r24
+ 2a8:	7f 91       	pop	r23
+ 2aa:	6f 91       	pop	r22
+ 2ac:	5f 91       	pop	r21
+ 2ae:	4f 91       	pop	r20
+ 2b0:	3f 91       	pop	r19
+ 2b2:	2f 91       	pop	r18
+ 2b4:	0f 90       	pop	r0
+ 2b6:	0f be       	out	0x3f, r0	; 63
  2b8:	0f 90       	pop	r0
- 2ba:	0f be       	out	0x3f, r0	; 63
- 2bc:	0f 90       	pop	r0
- 2be:	1f 90       	pop	r1
- 2c0:	18 95       	reti
+ 2ba:	1f 90       	pop	r1
+ 2bc:	18 95       	reti
 
-000002c2 <__tablejump2__>:
- 2c2:	ee 0f       	add	r30, r30
- 2c4:	ff 1f       	adc	r31, r31
- 2c6:	05 90       	lpm	r0, Z+
- 2c8:	f4 91       	lpm	r31, Z
- 2ca:	e0 2d       	mov	r30, r0
- 2cc:	09 94       	ijmp
+000002be <__tablejump2__>:
+ 2be:	ee 0f       	add	r30, r30
+ 2c0:	ff 1f       	adc	r31, r31
+ 2c2:	05 90       	lpm	r0, Z+
+ 2c4:	f4 91       	lpm	r31, Z
+ 2c6:	e0 2d       	mov	r30, r0
+ 2c8:	09 94       	ijmp
 
-000002ce <_exit>:
- 2ce:	f8 94       	cli
+000002ca <_exit>:
+ 2ca:	f8 94       	cli
 
-000002d0 <__stop_program>:
- 2d0:	ff cf       	rjmp	.-2      	; 0x2d0 <__stop_program>
+000002cc <__stop_program>:
+ 2cc:	ff cf       	rjmp	.-2      	; 0x2cc <__stop_program>
