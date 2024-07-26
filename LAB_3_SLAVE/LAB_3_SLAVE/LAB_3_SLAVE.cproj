@@ -143,12 +143,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="LIB_me\ADC\ADC.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="LIB_me\ADC\ADC.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="LIB_me\SPI\SPI.c">
       <SubType>compile</SubType>
     </Compile>
@@ -167,7 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="LIB_me" />
-    <Folder Include="LIB_me\ADC" />
     <Folder Include="LIB_me\SPI" />
     <Folder Include="LIB_me\UART" />
   </ItemGroup>
