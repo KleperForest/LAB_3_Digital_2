@@ -20,11 +20,12 @@
 #include <stdint.h>
 #include <util/delay.h>
 #include "LIB_me/ADC/ADC.h"
-#include "LIB_me/UART/UART.h"
 #include "LIB_me/SPI/SPI.h"
 
 uint8_t valorSPI = 0;
-uint16_t adc_value = 0;
+uint8_t adc_value_1 = 0;
+uint8_t adc_value_2 = 0;
+uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 
 void refreshPORT(uint8_t valor);
 
@@ -39,18 +40,24 @@ int main(void)
 	
 	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
 	ADC_Init();
+	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
 	SPCR |= (1<<SPIE); // Activar ISR SPI
 	sei();
 	
 	while (1)
 	{
-		adc_value = ADC_Read(6);
+		ADC_Read_Multiple(adc_channels, adc_results, 2);
+		adc_value_1 = adc_results[0];
+		adc_value_2 = adc_results[1];
+		
 	}
 }
 
 ISR(SPI_STC_vect) {
 	valorSPI = SPDR;
 	if (valorSPI == 'c') {
-		SPI_send(adc_value);
+		SPI_send(adc_value_1);
+		} else if (valorSPI == 'd') {
+		SPI_send(adc_value_2);
 	}
 }

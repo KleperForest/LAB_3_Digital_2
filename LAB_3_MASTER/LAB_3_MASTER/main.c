@@ -18,11 +18,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
-#include "LIB_me/ADC/ADC.h"
 #include "LIB_me/UART/UART.h"
 #include "LIB_me/SPI/SPI.h"
 
-uint16_t valorSPI = 0;
+uint16_t valorSPI_1 = 0;
+uint16_t valorSPI_2 = 0;
 
 void refreshPORT(uint16_t valor);
 
@@ -39,15 +39,22 @@ int main(void)
 	
 	while (1)
 	{
-		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
-		
-		SPI_send('c');
-		valorSPI = SPI_receive();
-		refreshPORT(valorSPI);
-		
-		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
-		
-		_delay_ms(150);
+			PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
+				
+			// Solicitar y recibir el primer valor de ADC (ADC7)
+			SPI_send('c');
+			valorSPI_1 = SPI_receive();
+				
+			// Solicitar y recibir el segundo valor de ADC (ADC6)
+			SPI_send('d');
+			valorSPI_2 = SPI_receive();
+				
+			//refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
+			//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa
+				
+			PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
+				
+			_delay_ms(150);
 	}
 }
 
