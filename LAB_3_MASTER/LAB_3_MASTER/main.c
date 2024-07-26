@@ -46,7 +46,7 @@ int main(void)
 	PORTB &= ~((1<<DDB0)|(1<<DDB1));
 	
 	// Iniciar Librerias SPI y UART
-	SPI_init(SPI_MASTER_OSC_DV16, SPI_Data_Order_MSB, SPI_Clock_IDLE_LOW, SPI_clock_First_EDGE);
+	SPI_init(SPI_MASTER_OSC_DV8, SPI_Data_Order_MSB, SPI_Clock_IDLE_LOW, SPI_clock_First_EDGE);
 	UART_Init(BAUD);
 	
 	display_menu(); // Mostrar el menú al inicio
@@ -60,8 +60,8 @@ int main(void)
 		valorSPI_1 = SPI_receive();
 		
 		// Solicitar y recibir el segundo valor de ADC (ADC6)
-		SPI_send('d');
-		valorSPI_2 = SPI_receive();
+		//SPI_send('d');
+		//valorSPI_2 = SPI_receive();
 		
 		refreshPORT(counter);
 		

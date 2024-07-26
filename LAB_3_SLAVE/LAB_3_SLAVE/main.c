@@ -57,8 +57,8 @@ int main(void)
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
 		
 		// Convertir los valores ADC a voltaje
-		voltage1 = (int)(((adc_results[0] * 5.0) / 1023)*100);
-		voltage2 = (int)(((adc_results[1] * 5.0) / 1023)*100);
+		voltage1 = (int)(((adc_results[0] * 5.0) / 896));
+		voltage2 = (int)(((adc_results[1] * 5.0) / 896)*);
 
 
 		// Leer y procesar los comandos de la UART
@@ -85,7 +85,7 @@ void display_menu(void) {
 void process_command(char command) {
 	switch (command) {
 		case '1':
-		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", adc_results[1], adc_results[0]);
+		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", voltage1, voltage2);
 		UART_TransmitString(buffer);
 		break;
 		default:
