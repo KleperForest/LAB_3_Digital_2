@@ -46,26 +46,29 @@ int main(void) {
 	while (1) {
 		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
 		
-		// Solicitar y recibir valores de ADC
+		// Solicitar y recibir el primer valor de ADC (ADC7)
 		SPI_send('c');
 		valorSPI_1 = SPI_receive();
 		
+		// Solicitar y recibir el segundo valor de ADC (ADC6)
 		SPI_send('d');
 		valorSPI_2 = SPI_receive();
 		
 		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
+
+		// Mapeo de ADC a voltaje
+		int voltage1 = (int)(((valorSPI_1 * 5.0) / 1023) * 100);
+		int voltage2 = (int)(((valorSPI_2 * 5.0) / 1023) * 100);
 		
-		// Enviar datos al computador
-		send_data_to_computer(valorSPI_1, valorSPI_2, counter);
-		
-		// Leer y procesar comandos de la UART
-		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles
+		// Leer y procesar los comandos de la UART
+		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
 			char received_char = UART_Receive();
-			process_command(received_char);
+			process_command(received_char, voltage1, voltage2);
 		}
 		
 		_delay_ms(150);
 	}
+
 }
 
 void send_data_to_computer(uint16_t adc1, uint16_t adc2, int counter) {
@@ -73,8 +76,31 @@ void send_data_to_computer(uint16_t adc1, uint16_t adc2, int counter) {
 	UART_TransmitString(buffer);
 }
 
-void process_command(char command) {
+////////////////////////////////////////////////////
+// Funciones auxiliares
+////////////////////////////////////////////////////
+
+void display_menu() {
+	UART_TransmitString("\r\n***** Menu *****\r\n");
+	UART_TransmitString("1. Mostrar valores de ADC7\r\n"); // Valor en ADC en voltaje voltage1
+	UART_TransmitString("2. Mostrar valores de ADC6\r\n"); // Valor en ADC en voltaje voltage2
+	UART_TransmitString("+. Incrementar contador (+)\r\n");
+	UART_TransmitString("-. Decrementar contador (-)\r\n");
+	UART_TransmitString("4. Mostrar valor del contador\r\n");
+	UART_TransmitString("*****************\r\n");
+	UART_TransmitString("Seleccione una opción: ");
+}
+
+void process_command(char command, int voltage1, int voltage2) {
 	switch (command) {
+		case '1':
+		snprintf(buffer, sizeof(buffer), "Valor ADC7: %d.%02d V\r\n", voltage1 / 100, voltage1 % 100);
+		UART_TransmitString(buffer);
+		break;
+		case '2':
+		snprintf(buffer, sizeof(buffer), "Valor ADC6: %d.%02d V\r\n", voltage2 / 100, voltage2 % 100);
+		UART_TransmitString(buffer);
+		break;
 		case '+':
 		counter++;
 		UART_TransmitString("Contador incrementado.\r\n");
@@ -83,8 +109,14 @@ void process_command(char command) {
 		counter--;
 		UART_TransmitString("Contador decrementado.\r\n");
 		break;
+		case '4':
+		snprintf(buffer, sizeof(buffer), "Valor del contador: %d\r\n", counter);
+		UART_TransmitString(buffer);
+		break;
 		default:
-		UART_TransmitString("Comando inválido.\r\n");
+		UART_TransmitString("Opción inválida. Por favor, seleccione una opción válida.\r\n");
 		break;
 	}
+	display_menu();
 }
+

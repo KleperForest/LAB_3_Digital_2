@@ -50,10 +50,17 @@ int main(void) {
 }
 
 ISR(SPI_STC_vect) {
-	uint8_t received_char = SPDR;
-	if (received_char == 'c') {
-		SPI_send(adc_value_1);
-		} else if (received_char == 'd') {
-		SPI_send(adc_value_2);
+	valorSPI = SPDR;
+	if (valorSPI == 'c') {
+		uint8_t adc_data = adc_value_1;
+		SPI_send(adc_data);
+		UART_TransmitString("Enviado ADC7: ");
+		UART_Transmit(adc_data);
+		} else if (valorSPI == 'd') {
+		uint8_t adc_data = adc_value_2;
+		SPI_send(adc_data);
+		UART_TransmitString("Enviado ADC6: ");
+		UART_Transmit(adc_data);
 	}
 }
+
