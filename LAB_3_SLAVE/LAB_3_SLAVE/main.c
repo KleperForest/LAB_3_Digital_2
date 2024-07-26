@@ -26,7 +26,6 @@
 ////////////////////////////////////////////////////
 char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en el LCD y UART
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
-int counter = 0;  // Contador inicial
 
 int voltage1, voltage2; //Mapeo de ADC
 
@@ -42,9 +41,7 @@ void process_command(char command);
 
 int main(void)
 {
-	// Configuración de puertos y periféricos
-	DDRD = 0xFF;  // Configura todos los pines del puerto D como salidas
-	DDRB = 0x0F;  // Configura los primeros dos pines del puerto B como salidas
+	
 	ADC_Init();  // Inicializa el ADC
 	UART_Init(BAUD);  // Inicializa la UART
 
@@ -81,9 +78,6 @@ int main(void)
 void display_menu(void) {
 	UART_TransmitString("\r\n***** Menu *****\r\n");
 	UART_TransmitString("1. Mostrar valores de ADC\r\n");
-	UART_TransmitString("2. Incrementar contador (+)\r\n");
-	UART_TransmitString("3. Decrementar contador (-)\r\n");
-	UART_TransmitString("4. Mostrar valor del contador\r\n");
 	UART_TransmitString("*****************\r\n");
 	UART_TransmitString("Seleccione una opción: ");
 }
@@ -92,18 +86,6 @@ void process_command(char command) {
 	switch (command) {
 		case '1':
 		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", adc_results[1], adc_results[0]);
-		UART_TransmitString(buffer);
-		break;
-		case '+':
-		counter++;
-		UART_TransmitString("Contador incrementado.\r\n");
-		break;
-		case '-':
-		counter--;
-		UART_TransmitString("Contador decrementado.\r\n");
-		break;
-		case '4':
-		snprintf(buffer, sizeof(buffer), "Valor del contador: %d\r\n", counter);
 		UART_TransmitString(buffer);
 		break;
 		default:
