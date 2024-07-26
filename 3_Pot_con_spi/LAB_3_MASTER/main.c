@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // Universidad del Valle de Guatemala
-// IE3054: ELECTRÓNICA DIGITAL 2
+// IE3054: ELECTRï¿½NICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_MASTER.c
-// Descripción: Laboratorio, comunicación SPI_Mode_Master.
+// Descripciï¿½n: Laboratorio, comunicaciï¿½n SPI_Mode_Master.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
@@ -23,6 +23,7 @@
 
 uint16_t valorSPI_1 = 0;
 uint16_t valorSPI_2 = 0;
+uint16_t valorSPI_3 = 0;
 
 void refreshPORT(uint16_t valor);
 
@@ -53,7 +54,7 @@ int main(void)
 					SPI_send('e');
 					valorSPI_3 = SPI_receive();
 					
-					refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
+					refreshPORT(valorSPI_1); // Puedes cambiar esta lï¿½nea segï¿½n cï¿½mo quieras usar los valores recibidos
 					//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa
 					//refreshPORT(valorSPI_3); // Opcional: usar el tercer valor para otra cosa
 					

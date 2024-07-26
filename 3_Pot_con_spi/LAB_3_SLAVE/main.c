@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // Universidad del Valle de Guatemala
-// IE3054: ELECTRÓNICA DIGITAL 2
+// IE3054: ELECTRï¿½NICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_SLAVE.c
-// Descripción: Laboratorio, comunicación SPI_Mode_Master.
+// Descripciï¿½n: Laboratorio, comunicaciï¿½n SPI_Mode_Master.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ uint8_t valorSPI = 0;
 uint8_t adc_value_1 = 0;
 uint8_t adc_value_2 = 0;
 uint8_t adc_value_3 = 0;
-uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
+uint16_t adc_results[3];  // Array para almacenar los resultados del ADC
 
 void refreshPORT(uint8_t valor);
 
@@ -41,7 +41,7 @@ int main(void)
 	
 	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
 	ADC_Init();
-	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
+	uint8_t adc_channels[] = {7, 6, 3};  // Canales ADC a leer (ADC7 y ADC6)
 	SPCR |= (1<<SPIE); // Activar ISR SPI
 	sei();
 	
