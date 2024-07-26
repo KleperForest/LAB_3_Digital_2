@@ -140,6 +140,12 @@
     <Compile Include="LIB_me\ADC\ADC.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="LIB_me\SPI\SPI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LIB_me\SPI\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="LIB_me\UART\UART.c">
       <SubType>compile</SubType>
     </Compile>
@@ -153,6 +159,7 @@
   <ItemGroup>
     <Folder Include="LIB_me" />
     <Folder Include="LIB_me\ADC" />
+    <Folder Include="LIB_me\SPI" />
     <Folder Include="LIB_me\UART" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
