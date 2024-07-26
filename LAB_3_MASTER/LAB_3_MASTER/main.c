@@ -22,7 +22,8 @@
 #include "LIB_me/SPI/SPI.h"
 
 uint16_t valorSPI_1 = 0;
-uint16_t valorSPI_2 = 0;
+/*uint16_t valorSPI_2 = 0;
+uint16_t valorSPI_3 = 0;*/
 
 void refreshPORT(uint16_t valor);
 
@@ -45,13 +46,13 @@ int main(void)
 					SPI_send('c');
 					valorSPI_1 = SPI_receive();
 					
-					// Solicitar y recibir el segundo valor de ADC (ADC6)
+					/*// Solicitar y recibir el segundo valor de ADC (ADC6)
 					SPI_send('d');
 					valorSPI_2 = SPI_receive();
 					
 					// Solicitar y recibir el tercer valor de ADC (ADC3)
 					SPI_send('e');
-					valorSPI_3 = SPI_receive();
+					valorSPI_3 = SPI_receive();*/
 					
 					refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
 					//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa

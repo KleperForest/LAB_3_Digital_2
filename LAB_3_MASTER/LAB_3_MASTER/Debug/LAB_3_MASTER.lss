@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 000007ae  00000000  00000000  00000dd6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000514  00000000  00000000  00001584  2**0
+  8 .debug_line   00000515  00000000  00000000  00001584  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000078  00000000  00000000  00001a98  2**2
+  9 .debug_frame  00000078  00000000  00000000  00001a9c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005a5  00000000  00000000  00001b10  2**0
+ 10 .debug_str    000005a7  00000000  00000000  00001b14  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000001a6  00000000  00000000  000020b5  2**0
+ 11 .debug_loc    000001a6  00000000  00000000  000020bb  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000038  00000000  00000000  0000225b  2**0
+ 12 .debug_ranges 00000038  00000000  00000000  00002261  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -433,23 +433,31 @@ int main(void)
 	
 	while (1)
 	{
-		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
+					PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
  232:	85 b1       	in	r24, 0x05	; 5
  234:	8b 7f       	andi	r24, 0xFB	; 251
  236:	85 b9       	out	0x05, r24	; 5
-		
-		SPI_send('c');
+					
+					// Solicitar y recibir el primer valor de ADC (ADC7)
+					SPI_send('c');
  238:	83 e6       	ldi	r24, 0x63	; 99
  23a:	0e 94 b4 00 	call	0x168	; 0x168 <SPI_send>
-		valorSPI = SPI_receive();
+					valorSPI_1 = SPI_receive();
  23e:	0e 94 b9 00 	call	0x172	; 0x172 <SPI_receive>
  242:	90 e0       	ldi	r25, 0x00	; 0
  244:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
  248:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
-		refreshPORT(valorSPI);
+					
+					// Solicitar y recibir el tercer valor de ADC (ADC3)
+					SPI_send('e');
+					valorSPI_3 = SPI_receive();*/
+					
+					refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
  24c:	0e 94 be 00 	call	0x17c	; 0x17c <refreshPORT>
-		
-		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
+					//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa
+					//refreshPORT(valorSPI_3); // Opcional: usar el tercer valor para otra cosa
+					
+					PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
  250:	85 b1       	in	r24, 0x05	; 5
  252:	84 60       	ori	r24, 0x04	; 4
  254:	85 b9       	out	0x05, r24	; 5
