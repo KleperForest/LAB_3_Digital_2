@@ -10,7 +10,16 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
+#define F_CPU 16000000UL
+#define BAUD 9600
+#define MY_UBRR F_CPU/16/BAUD-1
+
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <util/delay.h>
+#include "LIB_me/ADC/ADC.h"
+#include "LIB_me/UART/UART.h"
 
 int main(void)
 {
