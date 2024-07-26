@@ -33,7 +33,8 @@ typedef enum{
 
 // Funciones para inicializar el SPI
 void SPI_init(SPI_TYPE, SPI_Data_Order, SPI_Clock_Polarity, SPI_Clock_Phase);
-void SPI_send(uint8_t data);
-uint8_t SPI_receive(void);
+void SPI_Write(uint8_t data); 
+uint8_t SPI_Read(void);
+unsigned SpiDataReady();
 
 #endif // SPI_H

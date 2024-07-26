@@ -7,7 +7,7 @@ void SPI_init(SPI_TYPE sType, SPI_Data_Order sDataOrder, SPI_Clock_Polarity sClo
 	//PB4 -> SS
 	//PB5 -> SS
 	
-	if (sType & 0x10) { //Verificar si se configura como maestro..
+	if (sType & (1<<MSTR)) { //Verificar si se configura como maestro..
 		// Configurar como maestro
 		DDRB |= (1 << DDB3) | (1 << DDB5) | (1 << DDB2); // MOSI, SCK, SS como salidas
 		DDRB &= ~(1 << DDB4); // MISO como entrada
@@ -60,12 +60,23 @@ void SPI_init(SPI_TYPE sType, SPI_Data_Order sDataOrder, SPI_Clock_Polarity sClo
 	SPCR |= (1<<SPE)|sDataOrder|sClockPolarity|sClockPhase;
 }
 
-void SPI_send(uint8_t data) {
+void SPI_Write(uint8_t data) {
 	SPDR = data;
-	while (!(SPSR & (1 << SPIF))); // Esperar a que la transmisión termine
 }
 
-uint8_t SPI_receive(void) {
-	while (!(SPSR & (1 << SPIF))); // Esperar a que se reciba el dato
-	return SPDR;
+uint8_t SPI_Read(void) {
+	while(!(SPSR & (1<<SPIF)));
+	return(SPDR);
 }
+
+unsigned SpiDataReady(){
+	if(SPSR & (1<<SPIF))
+	return 1;
+	else
+	return 0;
+}
+
+static void spiReceivewait(){
+	while (!(SPSR & (1<<SPIF)));
+}
+

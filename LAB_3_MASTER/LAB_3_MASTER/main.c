@@ -56,25 +56,22 @@ int main(void)
 		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
 		
 		// Solicitar y recibir el primer valor de ADC (ADC7)
-		SPI_send('c');
-		valorSPI_1 = SPI_receive();
+		SPI_Write('c');
+		valorSPI_1 = SPI_Read();
 		
 		// Solicitar y recibir el segundo valor de ADC (ADC6)
-		//SPI_send('d');
-		//valorSPI_2 = SPI_receive();
+		//SPI_Write('d');
+		//valorSPI_2 = SPI_recei();
 		
 		refreshPORT(counter);
 		
 		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
 		
-		// Mapeo de ADC a voltaje
-		int voltage1 = (int)(((valorSPI_1 * 5.0) / 1023) * 100);
-		int voltage2 = (int)(((valorSPI_2 * 5.0) / 1023) * 100);
 		
 		// Leer y procesar los comandos de la UART
 		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
 			char received_char = UART_Receive();
-			process_command(received_char, voltage1, voltage2);
+			process_command(received_char, valorSPI_1, valorSPI_1);
 		}
 		
 		_delay_ms(150);
@@ -99,11 +96,11 @@ void display_menu() {
 void process_command(char command, int voltage1, int voltage2) {
 	switch (command) {
 		case '1':
-		snprintf(buffer, sizeof(buffer), "Valor ADC7: %d.%02d V\r\n", voltage1 / 100, voltage1 % 100);
+		snprintf(buffer, sizeof(buffer), "Valores ADC ADC7: %u\r\n", valorSPI_1);
 		UART_TransmitString(buffer);
 		break;
 		case '2':
-		snprintf(buffer, sizeof(buffer), "Valor ADC6: %d.%02d V\r\n", voltage2 / 100, voltage2 % 100);
+		snprintf(buffer, sizeof(buffer), "Valores ADC ADC6: %u\r\n", valorSPI_1);
 		UART_TransmitString(buffer);
 		break;
 		case '+':

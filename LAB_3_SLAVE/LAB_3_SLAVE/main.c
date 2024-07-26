@@ -78,7 +78,7 @@ int main(void)
 			process_command(received_char);
 		}
 
-		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización
+		_delay_ms(50);  // Espera medio segundo antes de la siguiente actualización
 	}
 }
 
@@ -109,6 +109,6 @@ void process_command(char command) {
 ISR(SPI_STC_vect) {
 		valorSPI = SPDR;
 		if (valorSPI == 'c') {
-			SPI_send(adc_results[0]);
+			SPI_Write(adc_results[0]);
 			}
 }
