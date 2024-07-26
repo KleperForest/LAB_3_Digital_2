@@ -47,19 +47,13 @@ int main(void)
 		
 		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
 		
-		_delay_ms(250);
+		_delay_ms(150);
 	}
 }
 
 void refreshPORT(uint16_t valor)
 {
-	if (valor == 1023)
-	{
-		PORTD &= ~((1<<PORTD2)|(1<<PORTD3)|(1<<PORTD4)|(1<<PORTD5)|(1<<PORTD6)|(1<<PORTD7));
-		PORTB &= ~((1<<PORTB0)|(1<<PORTB1));
-	}
-	else
-	{
+	
 		if (valor & 0b10000000) {
 			PORTB |= (1<<PORTB1);
 			} else {
@@ -100,5 +94,5 @@ void refreshPORT(uint16_t valor)
 			} else {
 			PORTD &= ~(1<<PORTD2);
 		}
-	}
+	
 }

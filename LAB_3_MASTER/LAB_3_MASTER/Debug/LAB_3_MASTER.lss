@@ -3,31 +3,31 @@ LAB_3_MASTER.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000304  2**0
+  0 .data         00000000  00800100  00800100  000002ee  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000290  00000000  00000000  00000074  2**1
+  1 .text         0000027a  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000002  00800100  00800100  00000304  2**0
+  2 .bss          00000002  00800100  00800100  000002ee  2**0
                   ALLOC
-  3 .comment      00000030  00000000  00000000  00000304  2**0
+  3 .comment      00000030  00000000  00000000  000002ee  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000334  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000320  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000058  00000000  00000000  00000374  2**0
+  5 .debug_aranges 00000058  00000000  00000000  00000360  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000a1e  00000000  00000000  000003cc  2**0
+  6 .debug_info   00000a1e  00000000  00000000  000003b8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 000007ae  00000000  00000000  00000dea  2**0
+  7 .debug_abbrev 000007ae  00000000  00000000  00000dd6  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000526  00000000  00000000  00001598  2**0
+  8 .debug_line   00000514  00000000  00000000  00001584  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000078  00000000  00000000  00001ac0  2**2
+  9 .debug_frame  00000078  00000000  00000000  00001a98  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005a5  00000000  00000000  00001b38  2**0
+ 10 .debug_str    000005a5  00000000  00000000  00001b10  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000001c4  00000000  00000000  000020dd  2**0
+ 11 .debug_loc    000001a6  00000000  00000000  000020b5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000038  00000000  00000000  000022a1  2**0
+ 12 .debug_ranges 00000038  00000000  00000000  0000225b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -88,8 +88,8 @@ Disassembly of section .text:
   8c:	a2 30       	cpi	r26, 0x02	; 2
   8e:	b2 07       	cpc	r27, r18
   90:	e1 f7       	brne	.-8      	; 0x8a <.do_clear_bss_loop>
-  92:	0e 94 12 01 	call	0x224	; 0x224 <main>
-  96:	0c 94 46 01 	jmp	0x28c	; 0x28c <_exit>
+  92:	0e 94 07 01 	call	0x20e	; 0x20e <main>
+  96:	0c 94 3b 01 	jmp	0x276	; 0x276 <_exit>
 
 0000009a <__bad_interrupt>:
   9a:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -134,7 +134,7 @@ void SPI_init(SPI_TYPE sType, SPI_Data_Order sDataOrder, SPI_Clock_Polarity sClo
   c4:	fc 01       	movw	r30, r24
   c6:	ec 5c       	subi	r30, 0xCC	; 204
   c8:	ff 4f       	sbci	r31, 0xFF	; 255
-  ca:	0c 94 40 01 	jmp	0x280	; 0x280 <__tablejump2__>
+  ca:	0c 94 35 01 	jmp	0x26a	; 0x26a <__tablejump2__>
 			case 0: //DIV2
 				SPCR &= ~((1<<SPR1)|(1<<SPR0));
   ce:	8c b5       	in	r24, 0x2c	; 44
@@ -282,222 +282,204 @@ uint8_t SPI_receive(void) {
  17a:	08 95       	ret
 
 0000017c <refreshPORT>:
-	}
 }
 
 void refreshPORT(uint16_t valor)
 {
-	if (valor == 1023)
- 17c:	8f 3f       	cpi	r24, 0xFF	; 255
- 17e:	23 e0       	ldi	r18, 0x03	; 3
- 180:	92 07       	cpc	r25, r18
- 182:	39 f4       	brne	.+14     	; 0x192 <refreshPORT+0x16>
-	{
-		PORTD &= ~((1<<PORTD2)|(1<<PORTD3)|(1<<PORTD4)|(1<<PORTD5)|(1<<PORTD6)|(1<<PORTD7));
- 184:	8b b1       	in	r24, 0x0b	; 11
- 186:	83 70       	andi	r24, 0x03	; 3
- 188:	8b b9       	out	0x0b, r24	; 11
-		PORTB &= ~((1<<PORTB0)|(1<<PORTB1));
- 18a:	85 b1       	in	r24, 0x05	; 5
- 18c:	8c 7f       	andi	r24, 0xFC	; 252
- 18e:	85 b9       	out	0x05, r24	; 5
- 190:	08 95       	ret
-	}
-	else
-	{
+	
 		if (valor & 0b10000000) {
- 192:	87 ff       	sbrs	r24, 7
- 194:	04 c0       	rjmp	.+8      	; 0x19e <refreshPORT+0x22>
+ 17c:	87 ff       	sbrs	r24, 7
+ 17e:	04 c0       	rjmp	.+8      	; 0x188 <refreshPORT+0xc>
 			PORTB |= (1<<PORTB1);
- 196:	25 b1       	in	r18, 0x05	; 5
- 198:	22 60       	ori	r18, 0x02	; 2
- 19a:	25 b9       	out	0x05, r18	; 5
- 19c:	03 c0       	rjmp	.+6      	; 0x1a4 <refreshPORT+0x28>
+ 180:	95 b1       	in	r25, 0x05	; 5
+ 182:	92 60       	ori	r25, 0x02	; 2
+ 184:	95 b9       	out	0x05, r25	; 5
+ 186:	03 c0       	rjmp	.+6      	; 0x18e <refreshPORT+0x12>
 			} else {
 			PORTB &= ~(1<<PORTB1);
- 19e:	25 b1       	in	r18, 0x05	; 5
- 1a0:	2d 7f       	andi	r18, 0xFD	; 253
- 1a2:	25 b9       	out	0x05, r18	; 5
+ 188:	95 b1       	in	r25, 0x05	; 5
+ 18a:	9d 7f       	andi	r25, 0xFD	; 253
+ 18c:	95 b9       	out	0x05, r25	; 5
 		}
 		if (valor & 0b01000000) {
- 1a4:	86 ff       	sbrs	r24, 6
- 1a6:	04 c0       	rjmp	.+8      	; 0x1b0 <refreshPORT+0x34>
+ 18e:	86 ff       	sbrs	r24, 6
+ 190:	04 c0       	rjmp	.+8      	; 0x19a <refreshPORT+0x1e>
 			PORTB |= (1<<PORTB0);
- 1a8:	25 b1       	in	r18, 0x05	; 5
- 1aa:	21 60       	ori	r18, 0x01	; 1
- 1ac:	25 b9       	out	0x05, r18	; 5
- 1ae:	03 c0       	rjmp	.+6      	; 0x1b6 <refreshPORT+0x3a>
+ 192:	95 b1       	in	r25, 0x05	; 5
+ 194:	91 60       	ori	r25, 0x01	; 1
+ 196:	95 b9       	out	0x05, r25	; 5
+ 198:	03 c0       	rjmp	.+6      	; 0x1a0 <refreshPORT+0x24>
 			} else {
 			PORTB &= ~(1<<PORTB0);
- 1b0:	25 b1       	in	r18, 0x05	; 5
- 1b2:	2e 7f       	andi	r18, 0xFE	; 254
- 1b4:	25 b9       	out	0x05, r18	; 5
+ 19a:	95 b1       	in	r25, 0x05	; 5
+ 19c:	9e 7f       	andi	r25, 0xFE	; 254
+ 19e:	95 b9       	out	0x05, r25	; 5
 		}
 		if (valor & 0b00100000) {
- 1b6:	85 ff       	sbrs	r24, 5
- 1b8:	04 c0       	rjmp	.+8      	; 0x1c2 <refreshPORT+0x46>
+ 1a0:	85 ff       	sbrs	r24, 5
+ 1a2:	04 c0       	rjmp	.+8      	; 0x1ac <refreshPORT+0x30>
 			PORTD |= (1<<PORTD7);
- 1ba:	2b b1       	in	r18, 0x0b	; 11
- 1bc:	20 68       	ori	r18, 0x80	; 128
- 1be:	2b b9       	out	0x0b, r18	; 11
- 1c0:	03 c0       	rjmp	.+6      	; 0x1c8 <refreshPORT+0x4c>
+ 1a4:	9b b1       	in	r25, 0x0b	; 11
+ 1a6:	90 68       	ori	r25, 0x80	; 128
+ 1a8:	9b b9       	out	0x0b, r25	; 11
+ 1aa:	03 c0       	rjmp	.+6      	; 0x1b2 <refreshPORT+0x36>
 			} else {
 			PORTD &= ~(1<<PORTD7);
- 1c2:	2b b1       	in	r18, 0x0b	; 11
- 1c4:	2f 77       	andi	r18, 0x7F	; 127
- 1c6:	2b b9       	out	0x0b, r18	; 11
+ 1ac:	9b b1       	in	r25, 0x0b	; 11
+ 1ae:	9f 77       	andi	r25, 0x7F	; 127
+ 1b0:	9b b9       	out	0x0b, r25	; 11
 		}
 		if (valor & 0b00010000) {
- 1c8:	84 ff       	sbrs	r24, 4
- 1ca:	04 c0       	rjmp	.+8      	; 0x1d4 <refreshPORT+0x58>
+ 1b2:	84 ff       	sbrs	r24, 4
+ 1b4:	04 c0       	rjmp	.+8      	; 0x1be <refreshPORT+0x42>
 			PORTD |= (1<<PORTD6);
- 1cc:	2b b1       	in	r18, 0x0b	; 11
- 1ce:	20 64       	ori	r18, 0x40	; 64
- 1d0:	2b b9       	out	0x0b, r18	; 11
- 1d2:	03 c0       	rjmp	.+6      	; 0x1da <refreshPORT+0x5e>
+ 1b6:	9b b1       	in	r25, 0x0b	; 11
+ 1b8:	90 64       	ori	r25, 0x40	; 64
+ 1ba:	9b b9       	out	0x0b, r25	; 11
+ 1bc:	03 c0       	rjmp	.+6      	; 0x1c4 <refreshPORT+0x48>
 			} else {
 			PORTD &= ~(1<<PORTD6);
- 1d4:	2b b1       	in	r18, 0x0b	; 11
- 1d6:	2f 7b       	andi	r18, 0xBF	; 191
- 1d8:	2b b9       	out	0x0b, r18	; 11
+ 1be:	9b b1       	in	r25, 0x0b	; 11
+ 1c0:	9f 7b       	andi	r25, 0xBF	; 191
+ 1c2:	9b b9       	out	0x0b, r25	; 11
 		}
 		if (valor & 0b00001000) {
- 1da:	83 ff       	sbrs	r24, 3
- 1dc:	04 c0       	rjmp	.+8      	; 0x1e6 <refreshPORT+0x6a>
+ 1c4:	83 ff       	sbrs	r24, 3
+ 1c6:	04 c0       	rjmp	.+8      	; 0x1d0 <refreshPORT+0x54>
 			PORTD |= (1<<PORTD5);
- 1de:	2b b1       	in	r18, 0x0b	; 11
- 1e0:	20 62       	ori	r18, 0x20	; 32
- 1e2:	2b b9       	out	0x0b, r18	; 11
- 1e4:	03 c0       	rjmp	.+6      	; 0x1ec <refreshPORT+0x70>
+ 1c8:	9b b1       	in	r25, 0x0b	; 11
+ 1ca:	90 62       	ori	r25, 0x20	; 32
+ 1cc:	9b b9       	out	0x0b, r25	; 11
+ 1ce:	03 c0       	rjmp	.+6      	; 0x1d6 <refreshPORT+0x5a>
 			} else {
 			PORTD &= ~(1<<PORTD5);
- 1e6:	2b b1       	in	r18, 0x0b	; 11
- 1e8:	2f 7d       	andi	r18, 0xDF	; 223
- 1ea:	2b b9       	out	0x0b, r18	; 11
+ 1d0:	9b b1       	in	r25, 0x0b	; 11
+ 1d2:	9f 7d       	andi	r25, 0xDF	; 223
+ 1d4:	9b b9       	out	0x0b, r25	; 11
 		}
 		if (valor & 0b00000100) {
- 1ec:	82 ff       	sbrs	r24, 2
- 1ee:	04 c0       	rjmp	.+8      	; 0x1f8 <refreshPORT+0x7c>
+ 1d6:	82 ff       	sbrs	r24, 2
+ 1d8:	04 c0       	rjmp	.+8      	; 0x1e2 <refreshPORT+0x66>
 			PORTD |= (1<<PORTD4);
- 1f0:	2b b1       	in	r18, 0x0b	; 11
- 1f2:	20 61       	ori	r18, 0x10	; 16
- 1f4:	2b b9       	out	0x0b, r18	; 11
- 1f6:	03 c0       	rjmp	.+6      	; 0x1fe <refreshPORT+0x82>
+ 1da:	9b b1       	in	r25, 0x0b	; 11
+ 1dc:	90 61       	ori	r25, 0x10	; 16
+ 1de:	9b b9       	out	0x0b, r25	; 11
+ 1e0:	03 c0       	rjmp	.+6      	; 0x1e8 <refreshPORT+0x6c>
 			} else {
 			PORTD &= ~(1<<PORTD4);
- 1f8:	2b b1       	in	r18, 0x0b	; 11
- 1fa:	2f 7e       	andi	r18, 0xEF	; 239
- 1fc:	2b b9       	out	0x0b, r18	; 11
+ 1e2:	9b b1       	in	r25, 0x0b	; 11
+ 1e4:	9f 7e       	andi	r25, 0xEF	; 239
+ 1e6:	9b b9       	out	0x0b, r25	; 11
 		}
 		if (valor & 0b00000010) {
- 1fe:	81 ff       	sbrs	r24, 1
- 200:	04 c0       	rjmp	.+8      	; 0x20a <refreshPORT+0x8e>
+ 1e8:	81 ff       	sbrs	r24, 1
+ 1ea:	04 c0       	rjmp	.+8      	; 0x1f4 <refreshPORT+0x78>
 			PORTD |= (1<<PORTD3);
- 202:	2b b1       	in	r18, 0x0b	; 11
- 204:	28 60       	ori	r18, 0x08	; 8
- 206:	2b b9       	out	0x0b, r18	; 11
- 208:	03 c0       	rjmp	.+6      	; 0x210 <refreshPORT+0x94>
+ 1ec:	9b b1       	in	r25, 0x0b	; 11
+ 1ee:	98 60       	ori	r25, 0x08	; 8
+ 1f0:	9b b9       	out	0x0b, r25	; 11
+ 1f2:	03 c0       	rjmp	.+6      	; 0x1fa <refreshPORT+0x7e>
 			} else {
 			PORTD &= ~(1<<PORTD3);
- 20a:	2b b1       	in	r18, 0x0b	; 11
- 20c:	27 7f       	andi	r18, 0xF7	; 247
- 20e:	2b b9       	out	0x0b, r18	; 11
+ 1f4:	9b b1       	in	r25, 0x0b	; 11
+ 1f6:	97 7f       	andi	r25, 0xF7	; 247
+ 1f8:	9b b9       	out	0x0b, r25	; 11
 		}
 		if (valor & 0b00000001) {
- 210:	80 ff       	sbrs	r24, 0
- 212:	04 c0       	rjmp	.+8      	; 0x21c <refreshPORT+0xa0>
+ 1fa:	80 ff       	sbrs	r24, 0
+ 1fc:	04 c0       	rjmp	.+8      	; 0x206 <refreshPORT+0x8a>
 			PORTD |= (1<<PORTD2);
- 214:	8b b1       	in	r24, 0x0b	; 11
- 216:	84 60       	ori	r24, 0x04	; 4
- 218:	8b b9       	out	0x0b, r24	; 11
- 21a:	08 95       	ret
+ 1fe:	8b b1       	in	r24, 0x0b	; 11
+ 200:	84 60       	ori	r24, 0x04	; 4
+ 202:	8b b9       	out	0x0b, r24	; 11
+ 204:	08 95       	ret
 			} else {
 			PORTD &= ~(1<<PORTD2);
- 21c:	8b b1       	in	r24, 0x0b	; 11
- 21e:	8b 7f       	andi	r24, 0xFB	; 251
- 220:	8b b9       	out	0x0b, r24	; 11
- 222:	08 95       	ret
+ 206:	8b b1       	in	r24, 0x0b	; 11
+ 208:	8b 7f       	andi	r24, 0xFB	; 251
+ 20a:	8b b9       	out	0x0b, r24	; 11
+ 20c:	08 95       	ret
 
-00000224 <main>:
+0000020e <main>:
 void refreshPORT(uint16_t valor);
 
 int main(void)
 {
 	// Configurar Pines como salida
 	DDRD |= (1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7);
- 224:	8a b1       	in	r24, 0x0a	; 10
- 226:	8c 6f       	ori	r24, 0xFC	; 252
- 228:	8a b9       	out	0x0a, r24	; 10
+ 20e:	8a b1       	in	r24, 0x0a	; 10
+ 210:	8c 6f       	ori	r24, 0xFC	; 252
+ 212:	8a b9       	out	0x0a, r24	; 10
 	DDRB |= (1<<DDB0)|(1<<DDB1);
- 22a:	84 b1       	in	r24, 0x04	; 4
- 22c:	83 60       	ori	r24, 0x03	; 3
- 22e:	84 b9       	out	0x04, r24	; 4
+ 214:	84 b1       	in	r24, 0x04	; 4
+ 216:	83 60       	ori	r24, 0x03	; 3
+ 218:	84 b9       	out	0x04, r24	; 4
 	
 	PORTD &= ~((1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7));
- 230:	8b b1       	in	r24, 0x0b	; 11
- 232:	83 70       	andi	r24, 0x03	; 3
- 234:	8b b9       	out	0x0b, r24	; 11
+ 21a:	8b b1       	in	r24, 0x0b	; 11
+ 21c:	83 70       	andi	r24, 0x03	; 3
+ 21e:	8b b9       	out	0x0b, r24	; 11
 	PORTB &= ~((1<<DDB0)|(1<<DDB1));
- 236:	85 b1       	in	r24, 0x05	; 5
- 238:	8c 7f       	andi	r24, 0xFC	; 252
- 23a:	85 b9       	out	0x05, r24	; 5
+ 220:	85 b1       	in	r24, 0x05	; 5
+ 222:	8c 7f       	andi	r24, 0xFC	; 252
+ 224:	85 b9       	out	0x05, r24	; 5
 	
 	SPI_init(SPI_MASTER_OSC_DV16,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
- 23c:	20 e0       	ldi	r18, 0x00	; 0
- 23e:	40 e0       	ldi	r20, 0x00	; 0
- 240:	60 e0       	ldi	r22, 0x00	; 0
- 242:	83 e5       	ldi	r24, 0x53	; 83
- 244:	0e 94 4f 00 	call	0x9e	; 0x9e <SPI_init>
+ 226:	20 e0       	ldi	r18, 0x00	; 0
+ 228:	40 e0       	ldi	r20, 0x00	; 0
+ 22a:	60 e0       	ldi	r22, 0x00	; 0
+ 22c:	83 e5       	ldi	r24, 0x53	; 83
+ 22e:	0e 94 4f 00 	call	0x9e	; 0x9e <SPI_init>
 	
 	while (1)
 	{
 		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
- 248:	85 b1       	in	r24, 0x05	; 5
- 24a:	8b 7f       	andi	r24, 0xFB	; 251
- 24c:	85 b9       	out	0x05, r24	; 5
+ 232:	85 b1       	in	r24, 0x05	; 5
+ 234:	8b 7f       	andi	r24, 0xFB	; 251
+ 236:	85 b9       	out	0x05, r24	; 5
 		
 		SPI_send('c');
- 24e:	83 e6       	ldi	r24, 0x63	; 99
- 250:	0e 94 b4 00 	call	0x168	; 0x168 <SPI_send>
+ 238:	83 e6       	ldi	r24, 0x63	; 99
+ 23a:	0e 94 b4 00 	call	0x168	; 0x168 <SPI_send>
 		valorSPI = SPI_receive();
- 254:	0e 94 b9 00 	call	0x172	; 0x172 <SPI_receive>
- 258:	90 e0       	ldi	r25, 0x00	; 0
- 25a:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
- 25e:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
+ 23e:	0e 94 b9 00 	call	0x172	; 0x172 <SPI_receive>
+ 242:	90 e0       	ldi	r25, 0x00	; 0
+ 244:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
+ 248:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
 		refreshPORT(valorSPI);
- 262:	0e 94 be 00 	call	0x17c	; 0x17c <refreshPORT>
+ 24c:	0e 94 be 00 	call	0x17c	; 0x17c <refreshPORT>
 		
 		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
- 266:	85 b1       	in	r24, 0x05	; 5
- 268:	84 60       	ori	r24, 0x04	; 4
- 26a:	85 b9       	out	0x05, r24	; 5
+ 250:	85 b1       	in	r24, 0x05	; 5
+ 252:	84 60       	ori	r24, 0x04	; 4
+ 254:	85 b9       	out	0x05, r24	; 5
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
- 26c:	2f ef       	ldi	r18, 0xFF	; 255
- 26e:	84 e3       	ldi	r24, 0x34	; 52
- 270:	9c e0       	ldi	r25, 0x0C	; 12
- 272:	21 50       	subi	r18, 0x01	; 1
- 274:	80 40       	sbci	r24, 0x00	; 0
- 276:	90 40       	sbci	r25, 0x00	; 0
- 278:	e1 f7       	brne	.-8      	; 0x272 <main+0x4e>
- 27a:	00 c0       	rjmp	.+0      	; 0x27c <main+0x58>
- 27c:	00 00       	nop
- 27e:	e4 cf       	rjmp	.-56     	; 0x248 <main+0x24>
+ 256:	2f ef       	ldi	r18, 0xFF	; 255
+ 258:	82 e5       	ldi	r24, 0x52	; 82
+ 25a:	97 e0       	ldi	r25, 0x07	; 7
+ 25c:	21 50       	subi	r18, 0x01	; 1
+ 25e:	80 40       	sbci	r24, 0x00	; 0
+ 260:	90 40       	sbci	r25, 0x00	; 0
+ 262:	e1 f7       	brne	.-8      	; 0x25c <main+0x4e>
+ 264:	00 c0       	rjmp	.+0      	; 0x266 <main+0x58>
+ 266:	00 00       	nop
+ 268:	e4 cf       	rjmp	.-56     	; 0x232 <main+0x24>
 
-00000280 <__tablejump2__>:
- 280:	ee 0f       	add	r30, r30
- 282:	ff 1f       	adc	r31, r31
- 284:	05 90       	lpm	r0, Z+
- 286:	f4 91       	lpm	r31, Z
- 288:	e0 2d       	mov	r30, r0
- 28a:	09 94       	ijmp
+0000026a <__tablejump2__>:
+ 26a:	ee 0f       	add	r30, r30
+ 26c:	ff 1f       	adc	r31, r31
+ 26e:	05 90       	lpm	r0, Z+
+ 270:	f4 91       	lpm	r31, Z
+ 272:	e0 2d       	mov	r30, r0
+ 274:	09 94       	ijmp
 
-0000028c <_exit>:
- 28c:	f8 94       	cli
+00000276 <_exit>:
+ 276:	f8 94       	cli
 
-0000028e <__stop_program>:
- 28e:	ff cf       	rjmp	.-2      	; 0x28e <__stop_program>
+00000278 <__stop_program>:
+ 278:	ff cf       	rjmp	.-2      	; 0x278 <__stop_program>

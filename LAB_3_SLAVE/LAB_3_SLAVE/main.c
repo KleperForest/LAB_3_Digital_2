@@ -44,7 +44,7 @@ int main(void)
 	
 	while (1)
 	{
-		adc_value = ADC_Read(7);
+		adc_value = ADC_Read(6);
 	}
 }
 

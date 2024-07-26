@@ -356,8 +356,8 @@ int main(void)
 	
 	while (1)
 	{
-		adc_value = ADC_Read(7);
- 1da:	87 e0       	ldi	r24, 0x07	; 7
+		adc_value = ADC_Read(6);
+ 1da:	86 e0       	ldi	r24, 0x06	; 6
  1dc:	0e 94 56 00 	call	0xac	; 0xac <ADC_Read>
  1e0:	90 93 01 01 	sts	0x0101, r25	; 0x800101 <__DATA_REGION_ORIGIN__+0x1>
  1e4:	80 93 00 01 	sts	0x0100, r24	; 0x800100 <__DATA_REGION_ORIGIN__>
