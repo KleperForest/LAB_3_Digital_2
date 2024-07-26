@@ -3,7 +3,7 @@
 // Universidad del Valle de Guatemala
 // IE3054: ELECTRÓNICA DIGITAL 2
 // Autor: Alan Gomez
-// Proyecto: LAB_2.c
+// Proyecto: LAB_3_SLAVE.c
 // Descripción: Laboratorio, librerias LCD, ADC y UART.
 // Hardware: ATmega328p
 // Created: 7/19/24 8:07 a.m.
