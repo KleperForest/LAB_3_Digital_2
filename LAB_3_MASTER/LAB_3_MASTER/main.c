@@ -39,22 +39,27 @@ int main(void)
 	
 	while (1)
 	{
-			PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
-				
-			// Solicitar y recibir el primer valor de ADC (ADC7)
-			SPI_send('c');
-			valorSPI_1 = SPI_receive();
-				
-			// Solicitar y recibir el segundo valor de ADC (ADC6)
-			SPI_send('d');
-			valorSPI_2 = SPI_receive();
-				
-			//refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
-			//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa
-				
-			PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
-				
-			_delay_ms(150);
+					PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
+					
+					// Solicitar y recibir el primer valor de ADC (ADC7)
+					SPI_send('c');
+					valorSPI_1 = SPI_receive();
+					
+					// Solicitar y recibir el segundo valor de ADC (ADC6)
+					SPI_send('d');
+					valorSPI_2 = SPI_receive();
+					
+					// Solicitar y recibir el tercer valor de ADC (ADC3)
+					SPI_send('e');
+					valorSPI_3 = SPI_receive();
+					
+					refreshPORT(valorSPI_1); // Puedes cambiar esta línea según cómo quieras usar los valores recibidos
+					//refreshPORT(valorSPI_2); // Opcional: usar el segundo valor para otra cosa
+					//refreshPORT(valorSPI_3); // Opcional: usar el tercer valor para otra cosa
+					
+					PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
+					
+					_delay_ms(150);
 	}
 }
 

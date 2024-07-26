@@ -25,6 +25,7 @@
 uint8_t valorSPI = 0;
 uint8_t adc_value_1 = 0;
 uint8_t adc_value_2 = 0;
+uint8_t adc_value_3 = 0;
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 
 void refreshPORT(uint8_t valor);
@@ -46,18 +47,21 @@ int main(void)
 	
 	while (1)
 	{
-		ADC_Read_Multiple(adc_channels, adc_results, 2);
+		ADC_Read_Multiple(adc_channels, adc_results, 3);
 		adc_value_1 = adc_results[0];
 		adc_value_2 = adc_results[1];
+		adc_value_3 = adc_results[2];
 		
 	}
 }
 
 ISR(SPI_STC_vect) {
-	valorSPI = SPDR;
-	if (valorSPI == 'c') {
-		SPI_send(adc_value_1);
-		} else if (valorSPI == 'd') {
-		SPI_send(adc_value_2);
-	}
+		valorSPI = SPDR;
+		if (valorSPI == 'c') {
+			SPI_send(adc_value_1);
+			} else if (valorSPI == 'd') {
+			SPI_send(adc_value_2);
+			} else if (valorSPI == 'e') {
+			SPI_send(adc_value_3);
+		}
 }
