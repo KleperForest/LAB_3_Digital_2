@@ -15,11 +15,13 @@
 #define MY_UBRR F_CPU/16/BAUD-1
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
 #include "LIB_me/ADC/ADC.h"
 #include "LIB_me/UART/UART.h"
+#include "LIB_me/SPI/SPI.h"
 
 ////////////////////////////////////////////////////
 // Variables.
@@ -27,7 +29,9 @@
 char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en el LCD y UART
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 
-int voltage1, voltage2; //Mapeo de ADC
+uint8_t valorSPI = 0;
+uint8_t adc_value_1 = 0;
+
 
 ////////////////////////////////////////////////////
 // Prototipos de funciones
@@ -41,8 +45,20 @@ void process_command(char command);
 
 int main(void)
 {
+	// Configurar Pines como salida
+	DDRD |= (1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7);
+	DDRB |= (1<<DDB0)|(1<<DDB1);
 	
+	PORTD &= ~((1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7));
+	PORTB &= ~((1<<DDB0)|(1<<DDB1));
+	
+	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
 	ADC_Init();  // Inicializa el ADC
+	//uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
+		
+	SPCR |= (1<<SPIE); // Activar ISR SPI
+	sei();
+	
 	UART_Init(BAUD);  // Inicializa la UART
 
 	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
@@ -80,7 +96,7 @@ void display_menu(void) {
 void process_command(char command) {
 	switch (command) {
 		case '1':
-		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", adc_results[0], adc_results[1]);
+		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", adc_results[1], adc_results[0]);
 		UART_TransmitString(buffer);
 		break;
 		default:
@@ -88,4 +104,11 @@ void process_command(char command) {
 		break;
 	}
 	display_menu();
+}
+
+ISR(SPI_STC_vect) {
+		valorSPI = SPDR;
+		if (valorSPI == 'c') {
+			SPI_send(adc_results[0]);
+			}
 }
