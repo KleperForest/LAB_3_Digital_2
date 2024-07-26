@@ -28,7 +28,7 @@ char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en UART
 uint16_t valorSPI_1 = 0;// Valor de POT_1
 uint16_t valorSPI_2 = 0;// Valor de POT_2
 
-void refreshPORT(uint16_t valor);//Refrescar leds
+void refreshPORT(uint8_t valor);//Refrescar leds
 
 int counter = 0;  // Contador inicial
 
@@ -85,7 +85,7 @@ int main(void)
 // Funciones auxiliares
 ////////////////////////////////////////////////////
 
-void display_menu(void) {
+void display_menu() {
 	UART_TransmitString("\r\n***** Menu *****\r\n");
 	UART_TransmitString("1. Mostrar valores de ADC7\r\n"); // Valor en ADC en voltaje voltage1
 	UART_TransmitString("2. Mostrar valores de ADC6\r\n"); // Valor en ADC en voltaje voltage2
@@ -125,7 +125,7 @@ void process_command(char command, int voltage1, int voltage2) {
 	display_menu();
 }
 
-void refreshPORT(uint16_t valor) {
+void refreshPORT(uint8_t valor) {
 	if (valor & 0b10000000) {
 		PORTB |= (1<<PORTB1);
 		} else {

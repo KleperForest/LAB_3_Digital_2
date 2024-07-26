@@ -46,7 +46,7 @@ int main(void)
 	
 	while (1)
 	{
-		ADC_Read_Multiple(adc_channels, adc_results, 3);
+		ADC_Read_Multiple(adc_channels, adc_results, 2);
 		adc_value_1 = adc_results[0];
 		adc_value_2 = adc_results[1];
 		
