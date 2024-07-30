@@ -20,10 +20,10 @@
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
     <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress />
+    <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <preserveEEPROM>true</preserveEEPROM>
-    <OverrideVtorValue />
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <BootSegment>2</BootSegment>
     <ResetRule>0</ResetRule>
     <eraseonlaunchrule>0</eraseonlaunchrule>
@@ -40,6 +40,19 @@
         </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
+    <avrtool>com.atmel.avrdbg.tool.simulator</avrtool>
+    <avrtoolserialnumber />
+    <avrdeviceexpectedsignature>0x1E950F</avrdeviceexpectedsignature>
+    <com_atmel_avrdbg_tool_simulator>
+      <ToolOptions xmlns="">
+        <InterfaceProperties>
+        </InterfaceProperties>
+      </ToolOptions>
+      <ToolType xmlns="">com.atmel.avrdbg.tool.simulator</ToolType>
+      <ToolNumber xmlns="">
+      </ToolNumber>
+      <ToolName xmlns="">Simulator</ToolName>
+    </com_atmel_avrdbg_tool_simulator>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <ToolchainSettings>
@@ -140,16 +153,22 @@
     <Compile Include="LIB_me\ADC\ADC.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LIB_me\SPI\SPI.c">
+    <Compile Include="LIB_me\POT_M\pot.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LIB_me\SPI\SPI.h">
+    <Compile Include="LIB_me\POT_M\pot.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LIB_me\UART\UART.c">
+    <Compile Include="LIB_me\SPI_M\SPI.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="LIB_me\UART\UART.h">
+    <Compile Include="LIB_me\SPI_M\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LIB_me\UART_M\UART.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LIB_me\UART_M\UART.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.c">
@@ -159,8 +178,9 @@
   <ItemGroup>
     <Folder Include="LIB_me" />
     <Folder Include="LIB_me\ADC" />
-    <Folder Include="LIB_me\SPI" />
-    <Folder Include="LIB_me\UART" />
+    <Folder Include="LIB_me\POT_M" />
+    <Folder Include="LIB_me\SPI_M" />
+    <Folder Include="LIB_me\UART_M" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Compiler.targets" />
 </Project>

@@ -14,8 +14,8 @@ void SPI_init()
 	*/
 	
 	
-	DDRB |= (1<<DDB4);  //MISO COMO SALIDA
-	DDRB &= ~((1<<DDB2) | (1<<DDB3) | (1<<DDB5));   //SS, MOSI, and SCK OUTPUT in master mode
+	DDRB |= (1<<DDB2) | (1<<DDB3) | (1<<DDB5);   //SS, MOSI, and SCK OUTPUT in master mode
+	DDRB &= ~(1<<DDB4);  //MISO como entrada
 
 	/*	Orden de salida de los datos 
 		DORD = 0, El bit más significativo (MSB) es enviado primero
@@ -56,7 +56,7 @@ void SPI_init()
 		MSTR = 0, SPI como esclavo
 		MSTR = 1; SPI como maestro
 	*/
-	SPCR &= ~(1<<MSTR);
+	SPCR |= (1<<MSTR);
 
 	/* Activar SPI 
 		SPE = 0, SPI desactivado
@@ -65,8 +65,44 @@ void SPI_init()
 	SPCR |= (1<<SPE);
 }
 
+void SPI_slaveON(uint8_t slave)
+{
+	switch (slave)
+	{
+		case 1:
+		//	PORTB &=~ (1<<PORTB1);  //Ejemplo por si se tiene otro o mas esclavos
+		break;
+		case 2:
+			PORTB &=~ (1<<PORTB2);
+		break;
+	}
+}
 
+void SPI_slaveOFF(uint8_t slave)
+{
+	switch (slave)
+	{
+		case 1:
+			//PORTB |= (1<<PORTB1);
+		break;
+		case 2:
+			PORTB |= (1<<PORTB2);
+		break;
+	}
+}
 
-	
+void SPI_tx(uint8_t data)
+{
+	/* Cargar dato al registro */
+	SPDR = data;
+	/* Esperar a que la transmisión se realice */
+	while(!(SPSR & (1<<SPIF)));
+}
 
-
+uint8_t SPI_rx()
+{
+	/* Esperar a la recepción del dato */
+	while(!(SPSR & (1<<SPIF)));
+	/* Retorna el dato recibido */
+	return SPDR;
+}

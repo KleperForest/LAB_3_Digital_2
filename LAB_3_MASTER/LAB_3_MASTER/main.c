@@ -10,157 +10,242 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-#define F_CPU 16000000UL
-#define BAUD 9600
-#define MY_UBRR F_CPU/16/BAUD-1
-
+/////////////////////////////////////////////
+//Librerias Primarias
+/////////////////////////////////////////////
+#define F_CPU 16000000
 #include <avr/io.h>
+#include <stdint.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <util/delay.h>
-#include "LIB_me/UART/UART.h"
-#include "LIB_me/SPI/SPI.h"
+/////////////////////////////////////////////
+//Librerias Secundarias
+/////////////////////////////////////////////
+#include "LIB_me/UART_M/UART.h"
+#include "LIB_me/SPI_M/SPI.h"
+#include "LIB_me/POT_M/POT.h"
+/////////////////////////////////////////////
+//Variables
+/////////////////////////////////////////////
+uint8_t datoRecibido1 = 0x00;
+uint8_t datoRecibido2 = 0x00;
 
-////////////////////////////////////////////////////
-// Variables.
-////////////////////////////////////////////////////
-char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en UART
-uint16_t valorSPI_1 = 0;// Valor de POT_1
-uint16_t valorSPI_2 = 0;// Valor de POT_2
+int activa = 0, menu2 = 0, i = 0;
+int cambio = 0, MAYOR = 0, MENOR  = 0, activa3 = 0, desactivador = 0;
+volatile char receivedChar = 0;    //Variable que almacena el valor del UART
 
-void refreshPORT(uint8_t valor);//Refrescar leds
+int lista1[] = {0,5,5}; //Lista de numeros a mostrar
+/////////////////////////////////////////////
+//Sub_rutinas
+/////////////////////////////////////////////
+void setup(void);
+void setup(void){
+	cli();  //Apagar interrupciones
+	DDRD = 0xFF;  //Puerto D como salida
+	DDRB = 0x03;  //Puerto C como salida
+	
+	initUART9600();  //Iniciar UART
+	SPI_init();
+	
 
-int counter = 0;  // Contador inicial
+	PORTD = 0x00;
+	sei(); //Activar interrupciones
+}
 
-////////////////////////////////////////////////////
-// Programa Principal
-////////////////////////////////////////////////////
-
+/////////////////////////////////////////////
+//Programa Principal
+/////////////////////////////////////////////
 int main(void)
 {
-	// Configurar Pines como salida
-	DDRD |= (1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7);
-	DDRB |= (1<<DDB0)|(1<<DDB1);
-	
-	PORTD &= ~((1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7));
-	PORTB &= ~((1<<DDB0)|(1<<DDB1));
-	
-	// Iniciar Librerias SPI y UART
-	SPI_init(SPI_MASTER_OSC_DV8, SPI_Data_Order_MSB, SPI_Clock_IDLE_LOW, SPI_clock_First_EDGE);
-	UART_Init(BAUD);
-	
-	display_menu(); // Mostrar el menú al inicio
+	setup();
 	
 	while (1)
 	{
-		PORTB &= ~(1<<PORTB2); // Selecciono SLAVE, QUIERO HABLAR
-		
-		// Solicitar y recibir el primer valor de ADC (ADC7)
-		SPI_Write('c');
-		valorSPI_1 = SPI_Read();
-		
-		// Solicitar y recibir el segundo valor de ADC (ADC6)
-		//SPI_Write('d');
-		//valorSPI_2 = SPI_recei();
-		
-		refreshPORT(counter);
-		
-		PORTB |= (1<<PORTB2); // Selecciono SLAVE, YA NO QUIERO HABLAR
-		
-		
-		// Leer y procesar los comandos de la UART
-		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
-			char received_char = UART_Receive();
-			process_command(received_char, valorSPI_1, valorSPI_1);
+		_delay_ms(5);
+		if (receivedChar == 'R') //si se desea usar python, bloquear el acceso a UART normal
+		{
+			activa = 1;
 		}
 		
-		_delay_ms(150);
+		if(activa == 0 && menu2 == 0){
+			writeTextUART("\n\r     **************MENU****************");   //Mostrar inicio
+			writeUART(10);
+			writeUART(13);
+			writeUART(10);
+			writeTextUART("          Potenciometro ADC6");   //Mostrar inicio
+			writeUART(10);
+			writeUART(13);
+			writeTextUART("          Potenciometro ADC7\n\r");   //Mostrar inicio
+			writeUART(10);
+			writeUART(13);
+			activa = 1;   //Salir del menu
+		}
+		
+		
+		
+		if (receivedChar !='c' && activa3 == 1)
+		{
+			
+			
+			switch(receivedChar){
+				case '0':
+				lista1[i] = 0;
+				break;
+				case '1':
+				lista1[i] = 1;
+				break;
+				case '2':
+				lista1[i] = 2;
+				break;
+				case '3':
+				lista1[i] = 3;
+				break;
+				case '4':
+				lista1[i] = 4;
+				break;
+				case '5':
+				lista1[i] = 5;
+				break;
+				case '6':
+				lista1[i] = 6;
+				break;
+				case '7':
+				lista1[i] = 7;
+				break;
+				case '8':
+				lista1[i] = 8;
+				break;
+				case '9':
+				lista1[i] = 9;
+				break;
+				
+			}
+			
+			
+			if (i >= 2)
+			{
+				int result = 0;
+
+				for (int P = 0; P < 3; P++) {
+					result = result * 10 + lista1[P];  // Construir el n?mero
+				}
+				
+				PORTD = result << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
+				PORTC = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				i = 0;
+				activa3 = 0;
+			}
+			
+
+			i++;
+			receivedChar = 'c';
+			
+		}
+		
+		
+		if(receivedChar != 0 && activa3 == 0){      //Si la variable que hay en USART es diferente de cero
+			
+			if (receivedChar == 'A') //Si se quiere enviar un valor directo al contador por python
+			{
+				activa3 = 1;
+				receivedChar = 'c';
+				i = 0;
+			}
+			
+			
+			
+			if ((receivedChar == '1' && menu2 == 0) || receivedChar == 'Q')   //Si se quiere ver los potenciometros, Q es para usar la interfaz de python
+			{
+				if (receivedChar == 'Q')
+				{
+					USANDOPYTHON(1);
+				}
+				else{
+					USANDOPYTHON(0);
+				}
+				
+				SPI_slaveON(2);
+				SPI_tx(1);
+				datoRecibido1 = SPI_rx();
+				SPI_slaveOFF(2);
+				
+				
+				SPI_slaveON(2);
+				SPI_tx(2);
+				datoRecibido2 = SPI_rx();
+				SPI_slaveOFF(2);
+				
+				POT(datoRecibido1, datoRecibido2);
+				
+				receivedChar = 0;
+			}
+			
+			
+			if (receivedChar == '2' ){   //Si se elige modificar el valor del contador
+				menu2 = 1;
+				writeTextUART("Presione + para incrementar, - para decrementar, e para menu principal \n\r");
+				writeUART(10);
+				writeUART(13);
+				writeUART(10);
+				writeUART(13);
+				
+				receivedChar = 0;
+			}
+			
+			if (receivedChar == '+' && menu2 == 1){
+				cambio ++;
+				if (cambio >= 255)    //si el contador es mayor de 255, dejarlo en 255
+				{
+					cambio = 255;
+				}
+				CONTA(cambio);
+				
+				
+				PORTD = cambio << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
+				PORTC = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				receivedChar = 0;
+				
+			}
+			
+			if (receivedChar == '-' && menu2 == 1){
+				cambio --;
+				
+				if (cambio <= 0)    //si el contador es mayor de 255, dejarlo en 255
+				{
+					cambio = 0;
+				}
+				CONTA(cambio);
+				PORTD = cambio << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
+				PORTB = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				receivedChar = 0;
+				
+			}
+			
+			if (receivedChar == 'e')
+			{
+				receivedChar = 0;
+				menu2 = 0;
+				activa = 0;
+				writeUART(10);  //Enviar un enter
+				writeUART(10);  //Enviar un enter
+				writeUART(10);  //Enviar un enter
+				writeUART(10);  //Enviar un enter
+				writeUART(10);  //Enviar un enter
+			}
+		}
+		
 	}
 }
 
-////////////////////////////////////////////////////
-// Funciones auxiliares
-////////////////////////////////////////////////////
-
-void display_menu() {
-	UART_TransmitString("\r\n***** Menu *****\r\n");
-	UART_TransmitString("1. Mostrar valores de ADC7\r\n"); // Valor en ADC en voltaje voltage1
-	UART_TransmitString("2. Mostrar valores de ADC6\r\n"); // Valor en ADC en voltaje voltage2
-	UART_TransmitString("+. Incrementar contador (+)\r\n");
-	UART_TransmitString("-. Decrementar contador (-)\r\n");
-	UART_TransmitString("4. Mostrar valor del contador\r\n");
-	UART_TransmitString("*****************\r\n");
-	UART_TransmitString("Seleccione una opción: ");
-}
-
-void process_command(char command, int voltage1, int voltage2) {
-	switch (command) {
-		case '1':
-		snprintf(buffer, sizeof(buffer), "Valores ADC ADC7: %u\r\n", valorSPI_1);
-		UART_TransmitString(buffer);
-		break;
-		case '2':
-		snprintf(buffer, sizeof(buffer), "Valores ADC ADC6: %u\r\n", valorSPI_1);
-		UART_TransmitString(buffer);
-		break;
-		case '+':
-		counter++;
-		UART_TransmitString("Contador incrementado.\r\n");
-		break;
-		case '-':
-		counter--;
-		UART_TransmitString("Contador decrementado.\r\n");
-		break;
-		case '4':
-		snprintf(buffer, sizeof(buffer), "Valor del contador: %d\r\n", counter);
-		UART_TransmitString(buffer);
-		break;
-		default:
-		UART_TransmitString("Opción inválida. Por favor, seleccione una opción válida.\r\n");
-		break;
-	}
-	display_menu();
-}
-
-void refreshPORT(uint8_t valor) {
-	if (valor & 0b10000000) {
-		PORTB |= (1<<PORTB1);
-		} else {
-		PORTB &= ~(1<<PORTB1);
-	}
-	if (valor & 0b01000000) {
-		PORTB |= (1<<PORTB0);
-		} else {
-		PORTB &= ~(1<<PORTB0);
-	}
-	if (valor & 0b00100000) {
-		PORTD |= (1<<PORTD7);
-		} else {
-		PORTD &= ~(1<<PORTD7);
-	}
-	if (valor & 0b00010000) {
-		PORTD |= (1<<PORTD6);
-		} else {
-		PORTD &= ~(1<<PORTD6);
-	}
-	if (valor & 0b00001000) {
-		PORTD |= (1<<PORTD5);
-		} else {
-		PORTD &= ~(1<<PORTD5);
-	}
-	if (valor & 0b00000100) {
-		PORTD |= (1<<PORTD4);
-		} else {
-		PORTD &= ~(1<<PORTD4);
-	}
-	if (valor & 0b00000010) {
-		PORTD |= (1<<PORTD3);
-		} else {
-		PORTD &= ~(1<<PORTD3);
-	}
-	if (valor & 0b00000001) {
-		PORTD |= (1<<PORTD2);
-		} else {
-		PORTD &= ~(1<<PORTD2);
-	}
+/////////////////////////////////////////////
+//Vector USART
+/////////////////////////////////////////////
+ISR(USART_RX_vect)
+{
+	receivedChar = UDR0; // Almacena el car?cter recibido
+	
+	while(!(UCSR0A & (1<<UDRE0)));    //Mientras haya caracteres
+	
 }
