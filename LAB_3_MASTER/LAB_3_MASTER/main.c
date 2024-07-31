@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // Universidad del Valle de Guatemala
-// IE3054: ELECTRÓNICA DIGITAL 2
+// IE3054: ELECTRï¿½NICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_MASTER.c
-// Descripción: Laboratorio, comunicación SPI_Mode_Master.
+// Descripciï¿½n: Laboratorio, comunicaciï¿½n SPI_Mode_Master.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
@@ -32,8 +32,8 @@
 uint8_t datoRecibido1 = 0x00;
 uint8_t datoRecibido2 = 0x00;
 
-int activa = 0, menu2 = 0, i = 0;
-int cambio = 0, MAYOR = 0, MENOR  = 0, activa3 = 0, desactivador = 0;
+int active = 0, menu2 = 0, i = 0;
+int Change = 0, MAX = 0, MIN  = 0, active3 = 0, desactivedor = 0;
 volatile char receivedChar = 0;    //Variable que almacena el valor del UART
 
 int lista1[] = {0,5,5}; //Lista de numeros a mostrar
@@ -44,14 +44,14 @@ void setup(void);
 void setup(void){
 	cli();  //Apagar interrupciones
 	DDRD = 0xFF;  //Puerto D como salida
-	DDRB = 0x03;  //Puerto C como salida
+	DDRC = 0x03;  //Puerto C como salida
 	
 	initUART9600();  //Iniciar UART
 	SPI_init();
 	
 
 	PORTD = 0x00;
-	sei(); //Activar interrupciones
+	sei(); //activer interrupciones
 }
 
 /////////////////////////////////////////////
@@ -66,26 +66,26 @@ int main(void)
 		_delay_ms(5);
 		if (receivedChar == 'R') //si se desea usar python, bloquear el acceso a UART normal
 		{
-			activa = 1;
+			active = 1;
 		}
 		
-		if(activa == 0 && menu2 == 0){
+		if(active == 0 && menu2 == 0){
 			writeTextUART("\n\r     **************MENU****************");   //Mostrar inicio
 			writeUART(10);
 			writeUART(13);
 			writeUART(10);
-			writeTextUART("          Potenciometro ADC6");   //Mostrar inicio
+			writeTextUART("          Potenciometro ADC0");   //Mostrar inicio
 			writeUART(10);
 			writeUART(13);
-			writeTextUART("          Potenciometro ADC7\n\r");   //Mostrar inicio
+			writeTextUART("          Potenciometro ADC1\n\r");   //Mostrar inicio
 			writeUART(10);
 			writeUART(13);
-			activa = 1;   //Salir del menu
+			active = 1;   //Salir del menu
 		}
 		
 		
 		
-		if (receivedChar !='c' && activa3 == 1)
+		if (receivedChar !='c' && active3 == 1)
 		{
 			
 			
@@ -135,7 +135,7 @@ int main(void)
 				PORTD = result << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
 				PORTC = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				i = 0;
-				activa3 = 0;
+				active3 = 0;
 			}
 			
 
@@ -145,11 +145,11 @@ int main(void)
 		}
 		
 		
-		if(receivedChar != 0 && activa3 == 0){      //Si la variable que hay en USART es diferente de cero
+		if(receivedChar != 0 && active3 == 0){      //Si la variable que hay en USART es diferente de cero
 			
 			if (receivedChar == 'A') //Si se quiere enviar un valor directo al contador por python
 			{
-				activa3 = 1;
+				active3 = 1;
 				receivedChar = 'c';
 				i = 0;
 			}
@@ -195,30 +195,30 @@ int main(void)
 			}
 			
 			if (receivedChar == '+' && menu2 == 1){
-				cambio ++;
-				if (cambio >= 255)    //si el contador es mayor de 255, dejarlo en 255
+				Change ++;
+				if (Change >= 255)    //si el contador es MAX de 255, dejarlo en 255
 				{
-					cambio = 255;
+					Change = 255;
 				}
-				CONTA(cambio);
+				CONTA(Change);
 				
 				
-				PORTD = cambio << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTC = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTD = Change << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
+				PORTC = Change >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				receivedChar = 0;
 				
 			}
 			
 			if (receivedChar == '-' && menu2 == 1){
-				cambio --;
+				Change --;
 				
-				if (cambio <= 0)    //si el contador es mayor de 255, dejarlo en 255
+				if (Change <= 0)    //si el contador es MAX de 255, dejarlo en 255
 				{
-					cambio = 0;
+					Change = 0;
 				}
-				CONTA(cambio);
-				PORTD = cambio << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTB = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				CONTA(Change);
+				PORTD = Change << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
+				PORTB = Change >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				receivedChar = 0;
 				
 			}
@@ -227,7 +227,7 @@ int main(void)
 			{
 				receivedChar = 0;
 				menu2 = 0;
-				activa = 0;
+				active = 0;
 				writeUART(10);  //Enviar un enter
 				writeUART(10);  //Enviar un enter
 				writeUART(10);  //Enviar un enter

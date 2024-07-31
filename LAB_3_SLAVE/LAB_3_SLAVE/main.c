@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // Universidad del Valle de Guatemala
-// IE3054: ELECTRÓNICA DIGITAL 2
+// IE3054: ELECTRï¿½NICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_SLAVE.c
-// Descripción: Laboratorio, comunicación SPI_Mode_Master.
+// Descripciï¿½n: Laboratorio, comunicaciï¿½n SPI_Mode_Master.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
@@ -30,10 +30,10 @@
 /////////////////////////////////////////////
 // Variables
 /////////////////////////////////////////////
-uint8_t value_1 = 0, value_2 = 0, case_spi = 0;    //Variables de procesamiento
+uint8_t value_1 = 0, value_2 = 0, cse_spi = 0;    //Variables de procesamiento
 
 /////////////////////////////////////////////
-//Función de configuración (setup)
+//Funciï¿½n de configuraciï¿½n (setup)
 /////////////////////////////////////////////
 void setup(void);
 void setup(void){
@@ -49,7 +49,7 @@ void setup(void){
 }
 
 /////////////////////////////////////////////
-//Función principal (main)
+//Funciï¿½n principal (main)
 /////////////////////////////////////////////
 
 int main(void)
@@ -67,53 +67,33 @@ int main(void)
 }
 
 /////////////////////////////////////////////
-//Interrupción del ADC (ISR(ADC_vect))
+//Interrupciï¿½n del ADC (ISR(ADC_vect))
 /////////////////////////////////////////////
 
-/*ISR(ADC_vect){
+ISR(ADC_vect){
 	
-	switch (case_spi){
+	switch (cse_spi){
 		case 0:
-		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0)); //Borrar configuracion actual y poner ADC0
+		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0)); //Borrar configuracion ADC0
 		value_1 = ADCH;
-		case_spi = 1;
+		cse_spi = 1;
 		break;
 		
 		case 1:
-		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0));   //Borrar configuracion actual y poner ADC1
+		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0));   //Borrar configuracion ADC1
 		ADMUX |= (1<<MUX0);
 		value_2 = ADCH;
-		case_spi = 0;
+		cse_spi = 0;
 		break;
 	}
 	
-	ADCSRA |= (1<<ADIF); //Se borra la bandera de interrupción
+	ADCSRA |= (1<<ADIF); //Se borra la bandera de interrupciï¿½n
 
-}*/
-
-ISR(ADC_vect){
-	switch (case_spi){
-		case 0:
-		ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Borrar la configuración actual
-		ADMUX |= (1<<MUX2) | (1<<MUX1); // Configurar para leer ADC6
-		value_1 = ADCH;  // Leer valor de ADC6
-		case_spi = 1;  // Cambiar al siguiente caso
-		break;
-		
-		case 1:
-		ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Borrar la configuración actual
-		ADMUX |= (1<<MUX2) | (1<<MUX1) | (1<<MUX0); // Configurar para leer ADC7
-		value_2 = ADCH;  // Leer valor de ADC7
-		case_spi = 0;  // Cambiar al siguiente caso
-		break;
-	}
-	
-	ADCSRA |= (1<<ADIF); // Limpiar la bandera de interrupción del ADC
 }
 
 
 /////////////////////////////////////////////
-//Interrupción SPI (ISR(SPI_STC_vect))
+//Interrupciï¿½n SPI (ISR(SPI_STC_vect))
 /////////////////////////////////////////////
 
 ISR(SPI_STC_vect){
