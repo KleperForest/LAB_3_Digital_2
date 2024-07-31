@@ -212,7 +212,7 @@ def contador():      #Funcion que se activa cuando se presiona el boton del cont
 lbl = Label(root, text = "LAB_3", bg = '#800080', fg = "white")
 lbl.pack()  #Ubicar el dato
 
-eperatorLabel1 = Label(root, text="----------------------------------------------------------------------------", fg = 'black')
+eperatorLabel1 = Label(root, text="////////////////////////////////////////////////////////////////////////////", fg = 'black')
 eperatorLabel1.pack()  #Ubicar el dato
 
 lbl1 = Label(root, text = "ADC 1:", bg = "#00FFFF")
