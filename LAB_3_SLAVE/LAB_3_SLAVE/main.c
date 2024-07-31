@@ -61,7 +61,7 @@ int main(void)
 	
 	UART_Init(BAUD);  // Inicializa la UART
 
-	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
+	uint8_t adc_channels[] = {1, 0};  // Canales ADC a leer (ADC7 y ADC6)
 
 
 	// Mostrar el menú inicial en la consola
