@@ -209,19 +209,19 @@ def contador():      #Funcion que se activa cuando se presiona el boton del cont
 # widgets in GUI
 #------------
 
-lbl = Label(root, text = "Laboratorio 3", bg = '#33ffb8')
+lbl = Label(root, text = "LAB_3", bg = '#800080', fg = "white")
 lbl.pack()  #Ubicar el dato
 
-eperatorLabel1 = Label(root, text="----------------------------------------------------------------------------", fg = '#ff3333')
+eperatorLabel1 = Label(root, text="----------------------------------------------------------------------------", fg = 'black')
 eperatorLabel1.pack()  #Ubicar el dato
 
-lbl1 = Label(root, text = "Valor Potenciómetro 1:", bg = "yellow")
+lbl1 = Label(root, text = "ADC 1:", bg = "#00FFFF")
 lbl1.place(x=50,y=70, width = 130, height = 30)
 
-lbl1 = Label(root, text = "Valor Potenciómetro 2:", bg = "yellow")
+lbl1 = Label(root, text = "ADC 2:", bg = "#00FFFF")
 lbl1.place(x=50,y=120, width = 130, height = 30)
 
-btn = Button(root, text = "Enviar dato al contador", command = contador, bg = "yellow", fg = "blue")  #colocar el boton de envio de  numero al contador
+btn = Button(root, text = "SEND", command = contador, bg = "red", fg = "white")  #colocar el boton de envio de  numero al contador
 btn.place(x=50,y=200)
 
 entry = Entry(root, bg='#fdf2e9')
