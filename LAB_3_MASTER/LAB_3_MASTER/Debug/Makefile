@@ -35,13 +35,17 @@ LINKER_SCRIPT_DEP:=
 SUBDIRS :=  \
 ../LIB_me \
 ../LIB_me/ADC \
-../LIB_me/UART
+../LIB_me/POT_M \
+../LIB_me/SPI_M \
+../LIB_me/UART_M
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../LIB_me/ADC/ADC.c \
-../LIB_me/UART/UART.c \
+../LIB_me/POT_M/pot.c \
+../LIB_me/SPI_M/SPI.c \
+../LIB_me/UART_M/UART.c \
 ../main.c
 
 
@@ -53,22 +57,30 @@ ASM_SRCS +=
 
 OBJS +=  \
 LIB_me/ADC/ADC.o \
-LIB_me/UART/UART.o \
+LIB_me/POT_M/pot.o \
+LIB_me/SPI_M/SPI.o \
+LIB_me/UART_M/UART.o \
 main.o
 
 OBJS_AS_ARGS +=  \
 LIB_me/ADC/ADC.o \
-LIB_me/UART/UART.o \
+LIB_me/POT_M/pot.o \
+LIB_me/SPI_M/SPI.o \
+LIB_me/UART_M/UART.o \
 main.o
 
 C_DEPS +=  \
 LIB_me/ADC/ADC.d \
-LIB_me/UART/UART.d \
+LIB_me/POT_M/pot.d \
+LIB_me/SPI_M/SPI.d \
+LIB_me/UART_M/UART.d \
 main.d
 
 C_DEPS_AS_ARGS +=  \
 LIB_me/ADC/ADC.d \
-LIB_me/UART/UART.d \
+LIB_me/POT_M/pot.d \
+LIB_me/SPI_M/SPI.d \
+LIB_me/UART_M/UART.d \
 main.d
 
 OUTPUT_FILE_PATH +=LAB_3_MASTER.elf
@@ -92,7 +104,21 @@ LIB_me/ADC/ADC.o: ../LIB_me/ADC/ADC.c
 	@echo Finished building: $<
 	
 
-LIB_me/UART/UART.o: ../LIB_me/UART/UART.c
+LIB_me/POT_M/pot.o: ../LIB_me/POT_M/pot.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+LIB_me/SPI_M/SPI.o: ../LIB_me/SPI_M/SPI.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+LIB_me/UART_M/UART.o: ../LIB_me/UART_M/UART.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\Atmel\ATmega_DFP\2.1.506\gcc\dev\atmega328p" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

@@ -10,54 +10,124 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-#define F_CPU 16000000UL
-
+/////////////////////////////////////////////
+//Librerias Primarias
+/////////////////////////////////////////////
+#define F_CPU 16000000
 #include <avr/io.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include <stdint.h>
 #include <util/delay.h>
-#include "LIB_me/ADC/ADC.h"
-#include "LIB_me/SPI/SPI.h"
+#include <avr/interrupt.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-uint8_t valorSPI = 0;
-uint8_t adc_value_1 = 0;
-uint8_t adc_value_2 = 0;
-uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
+/////////////////////////////////////////////
+//Librerias Secundarias
+/////////////////////////////////////////////
+#include "LIB_me/ADC/ADC.h"   //Incluir libreria de ADC
+#include "LIB_me/SPI/SPI.h"   //Incluir libreria SPI
 
-void refreshPORT(uint8_t valor);
+/////////////////////////////////////////////
+// Variables
+/////////////////////////////////////////////
+uint8_t value_1 = 0, value_2 = 0, case_spi = 0;    //Variables de procesamiento
+
+/////////////////////////////////////////////
+//Función de configuración (setup)
+/////////////////////////////////////////////
+void setup(void);
+void setup(void){
+	cli();  //Apagar interrupciones
+	DDRC =0;  //Puerto C como entrada
+	
+	SPI_init();
+	SPCR |= (1<<SPIE); //Activar interrupcion SPI
+	
+	initADC(); //Iniciar ADC
+	
+	sei(); //Activar interrupciones
+}
+
+/////////////////////////////////////////////
+//Función principal (main)
+/////////////////////////////////////////////
 
 int main(void)
 {
-	// Configurar Pines como salida
-	DDRD |= (1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7);
-	DDRB |= (1<<DDB0)|(1<<DDB1);
-	
-	PORTD &= ~((1<<DDD2)|(1<<DDD3)|(1<<DDD4)|(1<<DDD5)|(1<<DDD6)|(1<<DDD7));
-	PORTB &= ~((1<<DDB0)|(1<<DDB1));
-	
-	SPI_init(SPI_SLAVE_SS,SPI_Data_Order_MSB,SPI_Clock_IDLE_LOW,SPI_clock_First_EDGE);
-	ADC_Init();
-	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
-	SPCR |= (1<<SPIE); // Activar ISR SPI
-	sei();
+	setup();
 	
 	while (1)
 	{
-		ADC_Read_Multiple(adc_channels, adc_results, 3);
-		adc_value_1 = adc_results[0];
-		adc_value_2 = adc_results[1];
+		
+		ADCSRA |=(1<<ADSC);  //Leer ADC
+		_delay_ms(20);   //Retardo para evitar malos procesamientos del Atmega328P
+		
 		
 	}
 }
 
-ISR(SPI_STC_vect) {
-	valorSPI = SPDR;
-	if (valorSPI == 'c') {
-		SPI_send(adc_value_1);
-		} else if (valorSPI == 'd') {
-		SPI_send(adc_value_2);
+/////////////////////////////////////////////
+//Interrupción del ADC (ISR(ADC_vect))
+/////////////////////////////////////////////
+
+ISR(ADC_vect){
+	
+	switch (case_spi){
+		case 0:
+		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0)); //Borrar configuracion actual y poner ADC0
+		value_1 = ADCH;
+		case_spi = 1;
+		break;
+		
+		case 1:
+		ADMUX &= ~((1<<MUX2)|(1<<MUX1)|(1<<MUX0));   //Borrar configuracion actual y poner ADC1
+		ADMUX |= (1<<MUX0);
+		value_2 = ADCH;
+		case_spi = 0;
+		break;
 	}
+	
+	ADCSRA |= (1<<ADIF); //Se borra la bandera de interrupción
+
+}
+
+/*ISR(ADC_vect){
+	switch (case_spi){
+		case 0:
+		ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Borrar la configuración actual
+		ADMUX |= (1<<MUX2) | (1<<MUX1); // Configurar para leer ADC6
+		value_1 = ADCH;  // Leer valor de ADC6
+		case_spi = 1;  // Cambiar al siguiente caso
+		break;
+		
+		case 1:
+		ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Borrar la configuración actual
+		ADMUX |= (1<<MUX2) | (1<<MUX1) | (1<<MUX0); // Configurar para leer ADC7
+		value_2 = ADCH;  // Leer valor de ADC7
+		case_spi = 0;  // Cambiar al siguiente caso
+		break;
+	}
+	
+	ADCSRA |= (1<<ADIF); // Limpiar la bandera de interrupción del ADC
+}*/
+
+
+/////////////////////////////////////////////
+//Interrupción SPI (ISR(SPI_STC_vect))
+/////////////////////////////////////////////
+
+ISR(SPI_STC_vect){
+	uint8_t SPIVALOR = SPDR;
+
+	
+	if (SPIVALOR == 1)  //Si el maestro quiere ver el valor de los potenciometros
+	{
+		SPDR = value_2;
+	}
+	
+	if (SPIVALOR == 2)  //Si el maestro quiere ver el valor de los potenciometros
+	{
+		SPDR = value_1;
+	}
+
 }
