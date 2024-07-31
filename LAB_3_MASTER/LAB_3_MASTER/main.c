@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 // Universidad del Valle de Guatemala
-// IE3054: ELECTRÓNICA DIGITAL 2
+// IE3054: ELECTRï¿½NICA DIGITAL 2
 // Autor: Alan Gomez
 // Proyecto: LAB_3_MASTER.c
-// Descripción: Laboratorio, comunicación SPI_Mode_Master.
+// Descripciï¿½n: Laboratorio, comunicaciï¿½n SPI_Mode_Master.
 // Hardware: ATmega328p
 // Created: 7/25/2024 10:56:31 AM
 //////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ void setup(void);
 void setup(void){
 	cli();  //Apagar interrupciones
 	DDRD = 0xFF;  //Puerto D como salida
-	DDRB = 0x03;  //Puerto C como salida
+	DDRB = 0x03;  //Puerto B como salida
 	
 	initUART9600();  //Iniciar UART
 	SPI_init();
@@ -133,7 +133,7 @@ int main(void)
 				}
 				
 				PORTD = result << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTC = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				i = 0;
 				activa3 = 0;
 			}
@@ -204,7 +204,7 @@ int main(void)
 				
 				
 				PORTD = cambio << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTC = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				receivedChar = 0;
 				
 			}

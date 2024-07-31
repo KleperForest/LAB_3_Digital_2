@@ -70,7 +70,7 @@ int main(void)
 //Interrupción del ADC (ISR(ADC_vect))
 /////////////////////////////////////////////
 
-/*ISR(ADC_vect){
+ISR(ADC_vect){
 	
 	switch (case_spi){
 		case 0:
@@ -89,9 +89,9 @@ int main(void)
 	
 	ADCSRA |= (1<<ADIF); //Se borra la bandera de interrupción
 
-}*/
+}
 
-ISR(ADC_vect){
+/*ISR(ADC_vect){
 	switch (case_spi){
 		case 0:
 		ADMUX &= ~((1<<MUX3)|(1<<MUX2)|(1<<MUX1)|(1<<MUX0)); // Borrar la configuración actual
@@ -109,7 +109,7 @@ ISR(ADC_vect){
 	}
 	
 	ADCSRA |= (1<<ADIF); // Limpiar la bandera de interrupción del ADC
-}
+}*/
 
 
 /////////////////////////////////////////////

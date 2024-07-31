@@ -1747,7 +1747,7 @@ void setup(void){
 	DDRD = 0xFF;  //Puerto D como salida
  a64:	8f ef       	ldi	r24, 0xFF	; 255
  a66:	8a b9       	out	0x0a, r24	; 10
-	DDRB = 0x03;  //Puerto C como salida
+	DDRB = 0x03;  //Puerto B como salida
  a68:	83 e0       	ldi	r24, 0x03	; 3
  a6a:	84 b9       	out	0x04, r24	; 4
 	
@@ -2072,7 +2072,7 @@ int main(void)
  c82:	22 0f       	add	r18, r18
  c84:	22 0f       	add	r18, r18
  c86:	2b b9       	out	0x0b, r18	; 11
-				PORTC = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
  c88:	08 2e       	mov	r0, r24
  c8a:	89 2f       	mov	r24, r25
  c8c:	00 0c       	add	r0, r0
@@ -2081,7 +2081,7 @@ int main(void)
  c92:	00 0c       	add	r0, r0
  c94:	88 1f       	adc	r24, r24
  c96:	99 1f       	adc	r25, r25
- c98:	88 b9       	out	0x08, r24	; 8
+ c98:	85 b9       	out	0x05, r24	; 5
 				i = 0;
  c9a:	10 92 1a 02 	sts	0x021A, r1	; 0x80021a <i+0x1>
  c9e:	10 92 19 02 	sts	0x0219, r1	; 0x800219 <i>
@@ -2267,7 +2267,7 @@ int main(void)
  dee:	88 0f       	add	r24, r24
  df0:	88 0f       	add	r24, r24
  df2:	8b b9       	out	0x0b, r24	; 11
-				PORTC = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = cambio >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
  df4:	80 91 17 02 	lds	r24, 0x0217	; 0x800217 <cambio>
  df8:	90 91 18 02 	lds	r25, 0x0218	; 0x800218 <cambio+0x1>
  dfc:	08 2e       	mov	r0, r24
@@ -2278,7 +2278,7 @@ int main(void)
  e06:	00 0c       	add	r0, r0
  e08:	88 1f       	adc	r24, r24
  e0a:	99 1f       	adc	r25, r25
- e0c:	88 b9       	out	0x08, r24	; 8
+ e0c:	85 b9       	out	0x05, r24	; 5
 				receivedChar = 0;
  e0e:	10 92 14 02 	sts	0x0214, r1	; 0x800214 <receivedChar>
 				
