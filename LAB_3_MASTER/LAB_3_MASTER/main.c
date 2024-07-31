@@ -44,7 +44,7 @@ void setup(void);
 void setup(void){
 	cli();  //Apagar interrupciones
 	DDRD = 0xFF;  //Puerto D como salida
-	DDRC = 0x03;  //Puerto C como salida
+	DDRB = 0x03;  //Puerto B como salida
 	
 	initUART9600();  //Iniciar UART
 	SPI_init();
@@ -64,7 +64,7 @@ int main(void)
 	while (1)
 	{
 		_delay_ms(5);
-		if (receivedChar == 'R') //si se desea usar python, bloquear el acceso a UART normal
+		if (receivedChar == 'R') //si se d>esea usar python, bloquear el acceso a UART normal
 		{
 			active = 1;
 		}
@@ -133,7 +133,7 @@ int main(void)
 				}
 				
 				PORTD = result << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTC = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = result >> 6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				i = 0;
 				active3 = 0;
 			}
@@ -204,7 +204,7 @@ int main(void)
 				
 				
 				PORTD = Change << 2;  //Mostrar el valor del contador, con corrimiento hacia la derecha, de dos bits, muestra los primeros 6 bits
-				PORTC = Change >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
+				PORTB = Change >>6;   //Mostrar el valor del contador, con corrimiento hacia la izquierda, muestra los ultimos 2 bits
 				receivedChar = 0;
 				
 			}
